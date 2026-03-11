@@ -65,6 +65,10 @@
             50% { transform: scale(0.97); opacity: 0.8; }
             100% { transform: scale(1); }
         }
+        .modal-overlay {
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+        }
     </style>
 </head>
 <body class="bg-summer min-h-screen p-4 md:p-8 text-gray-800">
@@ -96,7 +100,7 @@
         <div id="actionArea" class="glass-card p-6 shadow-xl border border-white/50">
             <div id="inputForm">
                 <label class="block text-gray-600 mb-2 font-medium text-center">ใส่ชื่อเล่นมา:</label>
-                <input type="text" id="userName" placeholder="พิมพ์ชื่อแล้วเลือกสถานะ..." 
+                <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น..." 
                     class="w-full px-4 py-4 rounded-2xl border-2 border-gray-100 focus:border-blue-400 outline-none mb-5 text-lg transition-all shadow-inner text-center">
                 
                 <div class="grid grid-cols-1 gap-3">
@@ -141,6 +145,20 @@
         </div>
     </div>
 
+    <!-- Reason Modal -->
+    <div id="reasonModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl scale-in">
+            <h3 id="modalTitle" class="text-xl font-bold text-gray-800 mb-2">ระบุเหตุผลหน่อย</h3>
+            <p class="text-sm text-gray-500 mb-4">จะได้รู้ว่าทำไมถึงมาไม่ได้หรือยังไม่แน่ใจ</p>
+            <input type="text" id="reasonInput" placeholder="เช่น ติดหมี, ไม่มีเงิน, เมียด่า..." 
+                class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-orange-400 outline-none mb-6">
+            <div class="flex gap-2">
+                <button id="cancelReason" class="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl font-bold">ยกเลิก</button>
+                <button id="confirmReason" class="flex-1 py-3 bg-orange-500 text-white rounded-xl font-bold shadow-lg shadow-orange-200">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -169,12 +187,16 @@
             readyCount: document.getElementById('readyCount'),
             totalMoney: document.getElementById('totalMoney'),
             myStatusDisplay: document.getElementById('myCurrentStatusDisplay'),
-            viewingCount: document.getElementById('viewingCount')
+            viewingCount: document.getElementById('viewingCount'),
+            reasonModal: document.getElementById('reasonModal'),
+            reasonInput: document.getElementById('reasonInput'),
+            modalTitle: document.getElementById('modalTitle')
         };
 
         let myUid = null;
         let isProcessing = false;
-        let tapRegistry = {}; // Store taps per person
+        let tapRegistry = {};
+        let pendingStatus = null;
 
         function setView(view) {
             ui.inputForm.classList.add('hidden');
@@ -199,7 +221,7 @@
             }
         };
 
-        const updateStatus = async (statusType) => {
+        const updateStatus = async (statusType, reason = "") => {
             const name = ui.userNameInput.value.trim();
             if (!name) return alert("ใส่ชื่อด้วยจ้า");
             if (isProcessing) return;
@@ -207,11 +229,19 @@
             setView('loading');
             try {
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', myUid), {
-                    uid: myUid, name: name, status: statusType, timestamp: serverTimestamp()
+                    uid: myUid, 
+                    name: name, 
+                    status: statusType, 
+                    reason: reason,
+                    timestamp: serverTimestamp()
                 });
             } catch (err) {
                 setView('form');
-            } finally { isProcessing = false; }
+            } finally { 
+                isProcessing = false; 
+                ui.reasonModal.classList.add('hidden');
+                ui.reasonInput.value = "";
+            }
         };
 
         const deleteById = async (targetUid, targetName) => {
@@ -242,7 +272,7 @@
                         let statusTxt = 'ไปชัวร์';
                         if(myData.status === 'maybe') statusTxt = 'ยังไม่แน่';
                         if(myData.status === 'no') statusTxt = 'ไม่ไป';
-                        ui.myStatusDisplay.innerText = `ชื่อ: ${myData.name} (${statusTxt})`;
+                        ui.myStatusDisplay.innerText = `ชื่อ: ${myData.name} (${statusTxt})${myData.reason ? ' - ' + myData.reason : ''}`;
                     } else {
                         setView('form');
                     }
@@ -276,7 +306,7 @@
 
                 let cardBgClass = 'bg-gray-50 border-gray-200 text-gray-500 opacity-60';
                 let icon = '❌';
-                let subtext = 'ไม่ไปจ้า';
+                let subtext = p.reason || 'ไม่ไปจ้า';
 
                 if (isReady) {
                     cardBgClass = 'bg-green-50 border-green-200 text-green-800';
@@ -285,7 +315,7 @@
                 } else if (isMaybe) {
                     cardBgClass = 'bg-orange-50 border-orange-200 text-orange-800';
                     icon = '❓';
-                    subtext = 'รอดูงาน';
+                    subtext = p.reason || 'รอดูงาน';
                 }
 
                 container.innerHTML = `
@@ -296,12 +326,12 @@
                                 ${icon}
                             </span>
                             <div class="flex flex-col">
-                                <span class="font-bold text-lg">${p.name} ${isMe ? '<span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full ml-1">มึง</span>' : ''}</span>
-                                <span class="text-[10px] opacity-70">${subtext}</span>
+                                <span class="font-bold text-lg leading-tight">${p.name} ${isMe ? '<span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full ml-1 font-normal">คุณ</span>' : ''}</span>
+                                <span class="text-xs opacity-70 italic">${subtext}</span>
                             </div>
                         </div>
                         <div class="text-right pointer-events-none">
-                             ${isMe ? '<div class="text-[10px] text-gray-400 animate-pulse">← ปัดซ้าย หรือกด 4 ที</div>' : '<div class="text-[10px] text-gray-400 opacity-40">กด 4 ทีเพื่อลบ</div>'}
+                             ${isMe ? '<div class="text-[10px] text-gray-400">ปัดซ้ายเพื่อลบ</div>' : ''}
                         </div>
                     </div>
                 `;
@@ -309,31 +339,21 @@
                 const content = container.querySelector('.swipe-content');
                 const actionBtn = container.querySelector('.swipe-action');
 
-                // Tap Count Logic (4 taps to delete)
                 content.addEventListener('click', () => {
                     const now = Date.now();
                     if (!tapRegistry[p.uid]) tapRegistry[p.uid] = { count: 0, last: 0 };
-                    
-                    // Reset if too long between taps (more than 1.5 seconds)
-                    if (now - tapRegistry[p.uid].last > 1500) {
-                        tapRegistry[p.uid].count = 0;
-                    }
-
+                    if (now - tapRegistry[p.uid].last > 1500) tapRegistry[p.uid].count = 0;
                     tapRegistry[p.uid].count++;
                     tapRegistry[p.uid].last = now;
-
-                    // Visual Feedback
                     content.classList.remove('tap-feedback');
-                    void content.offsetWidth; // Trigger reflow
+                    void content.offsetWidth;
                     content.classList.add('tap-feedback');
-
                     if (tapRegistry[p.uid].count >= 4) {
-                        tapRegistry[p.uid].count = 0; // reset
+                        tapRegistry[p.uid].count = 0;
                         deleteById(p.uid, p.name);
                     }
                 });
 
-                // Swipe Logic
                 actionBtn.onclick = (e) => {
                     e.stopPropagation();
                     deleteById(p.uid, p.name);
@@ -358,11 +378,7 @@
 
                 content.addEventListener('touchend', () => {
                     isSwiping = false;
-                    if (currentTranslate < -60) {
-                        currentTranslate = -100;
-                    } else {
-                        currentTranslate = 0;
-                    }
+                    currentTranslate = currentTranslate < -60 ? -100 : 0;
                     content.style.transform = `translateX(${currentTranslate}px)`;
                 });
 
@@ -376,10 +392,26 @@
             });
         }
 
+        const openReasonModal = (status) => {
+            const name = ui.userNameInput.value.trim();
+            if (!name) return alert("ใส่ชื่อด้วยจ้า");
+            pendingStatus = status;
+            ui.modalTitle.innerText = status === 'maybe' ? 'ทำไมถึงยังไม่ชัวร์?' : 'ทำไมถึงไปไม่ได้?';
+            ui.reasonModal.classList.remove('hidden');
+            ui.reasonInput.focus();
+        };
+
         document.getElementById('btnReady').onclick = () => updateStatus('ready');
-        document.getElementById('btnMaybe').onclick = () => updateStatus('maybe');
-        document.getElementById('btnNo').onclick = () => updateStatus('no');
+        document.getElementById('btnMaybe').onclick = () => openReasonModal('maybe');
+        document.getElementById('btnNo').onclick = () => openReasonModal('no');
         document.getElementById('btnChangeName').onclick = () => setView('form');
+        
+        document.getElementById('cancelReason').onclick = () => ui.reasonModal.classList.add('hidden');
+        document.getElementById('confirmReason').onclick = () => {
+            const reason = ui.reasonInput.value.trim();
+            updateStatus(pendingStatus, reason);
+        };
+
         window.onload = startApp;
     </script>
 </body>
