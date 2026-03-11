@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ทริปพูลวิลล่า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; overflow-x: hidden; }
+        .bg-summer {
+            background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+        
+        /* Swipe to delete styles */
+        .swipe-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            touch-action: pan-y;
+        }
+        .swipe-content {
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            background: white;
+        }
+        .swipe-action {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            background: #ef4444;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            font-weight: bold;
+            font-size: 0.875rem;
+            border-radius: 0 1rem 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-summer min-h-screen p-4 md:p-8 text-gray-800">
+
+    <div class="max-w-xl mx-auto space-y-6">
+        <!-- Header Section -->
+        <div class="glass-card p-6 text-center border-b-4 border-yellow-400 shadow-2xl">
+            <h1 class="text-3xl font-bold text-blue-900 mb-3">🏖️ เช็คชื่อพูลวิลล่า</h1>
+            <div class="bg-blue-50 p-4 rounded-xl text-left border border-blue-100 mb-6">
+                <p class="text-sm text-blue-700 space-y-1">
+                    💰 หารกันคนละ <strong>500 - 600 บาท</strong> (10 คน)<br>
+                    ❌ ใครไม่มา <strong>กดปุ่ม "ไม่ไป"</strong> คัฟ
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-blue-600 p-4 rounded-2xl text-white shadow-lg text-center">
+                    <span class="block text-xs opacity-80 uppercase">ไปแน่นอน</span>
+                    <span id="readyCount" class="text-3xl md:text-4xl font-bold">0/10</span>
+                </div>
+                <div class="bg-indigo-700 p-4 rounded-2xl text-white shadow-lg text-center">
+                    <span class="block text-xs opacity-80 uppercase">ยอดเงินกองกลาง</span>
+                    <span id="totalMoney" class="text-3xl md:text-4xl font-bold text-yellow-300">฿0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Action Area -->
+        <div id="actionArea" class="glass-card p-6 shadow-xl border border-white/50">
+            <div id="inputForm">
+                <label class="block text-gray-600 mb-2 font-medium text-center">ใส่ชื่อ้เล่นมา:</label>
+                <input type="text" id="userName" placeholder="พิมพ์ชื่อแล้วเลือกสถานะ..." 
+                    class="w-full px-4 py-4 rounded-2xl border-2 border-gray-100 focus:border-blue-400 outline-none mb-5 text-lg transition-all shadow-inner text-center">
+                
+                <div class="grid grid-cols-1 gap-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="btnReady" class="bg-green-500 hover:bg-green-600 text-white font-bold py-5 rounded-2xl shadow-lg text-xl transition-all active:scale-95">
+                            👍 ไปแน่นอน
+                        </button>
+                        <button id="btnMaybe" class="bg-orange-400 hover:bg-orange-500 text-white font-bold py-5 rounded-2xl shadow-lg text-xl transition-all active:scale-95">
+                            🤔 ไม่ชัวร์
+                        </button>
+                    </div>
+                    <button id="btnNo" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-4 rounded-2xl shadow-md text-lg transition-all active:scale-95">
+                        ❌ ไม่ไป
+                    </button>
+                </div>
+            </div>
+
+            <div id="statusControl" class="hidden text-center py-6">
+                <div class="text-5xl mb-2">✨</div>
+                <p class="text-2xl font-bold text-blue-600">ลงชื่อเรียบร้อยยย</p>
+                <p id="myCurrentStatusDisplay" class="text-gray-500 mt-1"></p>
+                <div class="mt-6 flex flex-col gap-2">
+                    <button id="btnChangeName" class="text-blue-500 underline text-sm hover:text-blue-700">แก้ไขชื่อ / เปลี่ยนสถานะ</button>
+                    <p class="text-[10px] text-gray-400 mt-4 italic text-center">💡 ลอง "ปัดซ้าย" ที่ชื่อในรายการข้างล่างเพื่อลบได้นะ</p>
+                </div>
+            </div>
+
+            <div id="loadingState" class="hidden text-center py-10">
+                <p class="text-xl font-bold text-blue-400 loading-dots">กำลังประมวลผล</p>
+            </div>
+        </div>
+
+        <!-- List Section -->
+        <div class="glass-card p-6 shadow-xl border border-white/50">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-xl text-blue-900">👥 รายชื่ออัปเดต</h3>
+                <span id="viewingCount" class="text-[10px] bg-red-100 text-red-500 px-2 py-1 rounded-full font-bold uppercase">LIVE: 1</span>
+            </div>
+            <div id="statusList" class="space-y-4 min-h-[100px]">
+                <div class="text-center py-10 text-gray-400 animate-pulse text-sm">กำลังโหลดข้อมูล...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyApSBu9MKCqgWhH1_cnqi6l3rPsAx_kZVI",
+            authDomain: "trip-cd6e4.firebaseapp.com",
+            projectId: "trip-cd6e4",
+            storageBucket: "trip-cd6e4.firebasestorage.app",
+            messagingSenderId: "62941354715",
+            appId: "1:62941354715:web:eb91d5c570179b0abb4afe"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = "pool-villa-trip-group-line";
+
+        const ui = {
+            inputForm: document.getElementById('inputForm'),
+            statusControl: document.getElementById('statusControl'),
+            loadingState: document.getElementById('loadingState'),
+            statusListEl: document.getElementById('statusList'),
+            userNameInput: document.getElementById('userName'),
+            readyCount: document.getElementById('readyCount'),
+            totalMoney: document.getElementById('totalMoney'),
+            myStatusDisplay: document.getElementById('myCurrentStatusDisplay'),
+            viewingCount: document.getElementById('viewingCount')
+        };
+
+        let myUid = null;
+        let isProcessing = false;
+
+        function setView(view) {
+            ui.inputForm.classList.add('hidden');
+            ui.statusControl.classList.add('hidden');
+            ui.loadingState.classList.add('hidden');
+            if (view === 'form') ui.inputForm.classList.remove('hidden');
+            if (view === 'control') ui.statusControl.classList.remove('hidden');
+            if (view === 'loading') ui.loadingState.classList.remove('hidden');
+        }
+
+        const startApp = async () => {
+            try {
+                const userCredential = await signInAnonymously(auth);
+                myUid = userCredential.user.uid;
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'viewers', myUid), { 
+                    lastSeen: serverTimestamp() 
+                });
+                initListListener();
+                initViewersListener();
+            } catch (error) {
+                ui.statusListEl.innerHTML = '<p class="text-red-500 text-center py-5">กรุณารีเฟรชใหม่</p>';
+            }
+        };
+
+        const updateStatus = async (statusType) => {
+            const name = ui.userNameInput.value.trim();
+            if (!name) return alert("ใส่ชื่อด้วยจ้า");
+            if (isProcessing) return;
+            isProcessing = true;
+            setView('loading');
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', myUid), {
+                    uid: myUid, name: name, status: statusType, timestamp: serverTimestamp()
+                });
+            } catch (err) {
+                setView('form');
+            } finally { isProcessing = false; }
+        };
+
+        const deleteStatus = async () => {
+            if (!confirm("ลบรายชื่อออกใช่ไหม?")) return;
+            isProcessing = true;
+            setView('loading');
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', myUid));
+                ui.userNameInput.value = "";
+            } catch (err) {
+                setView('control');
+            } finally { isProcessing = false; }
+        };
+
+        function initListListener() {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'responses'), (snap) => {
+                const list = [];
+                snap.forEach(d => list.push(d.data()));
+                list.sort((a, b) => (a.timestamp?.toMillis() || 0) - (b.timestamp?.toMillis() || 0));
+
+                const myData = list.find(item => item.uid === myUid);
+                if (!isProcessing) {
+                    if (myData) {
+                        setView('control');
+                        let statusTxt = 'ไปชัวร์';
+                        if(myData.status === 'maybe') statusTxt = 'ยังไม่แน่';
+                        if(myData.status === 'no') statusTxt = 'ไม่ไป';
+                        ui.myStatusDisplay.innerText = `ชื่อ: ${myData.name} (${statusTxt})`;
+                    } else {
+                        setView('form');
+                    }
+                }
+                const readyArr = list.filter(i => i.status === 'ready');
+                ui.readyCount.innerText = `${readyArr.length}/10`;
+                ui.totalMoney.innerText = `฿${(readyArr.length * 500).toLocaleString()}`;
+                renderList(list);
+            });
+        }
+
+        function renderList(list) {
+            ui.statusListEl.innerHTML = '';
+            if (list.length === 0) {
+                ui.statusListEl.innerHTML = '<p class="text-center text-gray-400 py-10 italic">ยังไม่มีใครลงชื่อเลย...</p>';
+                return;
+            }
+
+            list.forEach((p) => {
+                const isReady = p.status === 'ready';
+                const isMaybe = p.status === 'maybe';
+                const isNo = p.status === 'no';
+                const isMe = p.uid === myUid;
+                
+                const container = document.createElement('div');
+                container.className = 'swipe-container group';
+                
+                let startX = 0;
+                let currentTranslate = 0;
+                let isSwiping = false;
+
+                let cardBgClass = 'bg-gray-50 border-gray-200 text-gray-500 opacity-60';
+                let icon = '❌';
+                let subtext = 'ไม่ไปจ้า';
+
+                if (isReady) {
+                    cardBgClass = 'bg-green-50 border-green-200 text-green-800';
+                    icon = '✅';
+                    subtext = 'พร้อมโอน';
+                } else if (isMaybe) {
+                    cardBgClass = 'bg-orange-50 border-orange-200 text-orange-800';
+                    icon = '❓';
+                    subtext = 'รอดูงาน';
+                }
+
+                const cardHtml = `
+                    <div class="swipe-action" onclick="window.confirmDelete()">ลบชื่อ</div>
+                    <div class="swipe-content flex items-center justify-between p-4 border shadow-sm ${cardBgClass} ${isMe ? 'ring-2 ring-blue-400 ring-offset-2' : ''}">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-sm">
+                                ${icon}
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-bold text-lg">${p.name} ${isMe ? '<span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full ml-1">มึง</span>' : ''}</span>
+                                <span class="text-[10px] opacity-70">${subtext}</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                             ${isMe ? '<div class="text-[10px] text-gray-400 animate-pulse">← ปัดซ้ายเพื่อลบ</div>' : ''}
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = cardHtml;
+                const content = container.querySelector('.swipe-content');
+
+                if (isMe) {
+                    content.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].clientX;
+                        isSwiping = true;
+                    });
+
+                    content.addEventListener('touchmove', (e) => {
+                        if (!isSwiping) return;
+                        const diff = e.touches[0].clientX - startX;
+                        if (diff < 0) { 
+                            currentTranslate = Math.max(diff, -100);
+                            content.style.transform = `translateX(${currentTranslate}px)`;
+                        } else if (diff > 0 && currentTranslate < 0) {
+                            currentTranslate = Math.min(0, currentTranslate + diff/5);
+                            content.style.transform = `translateX(${currentTranslate}px)`;
+                        }
+                    });
+
+                    content.addEventListener('touchend', () => {
+                        isSwiping = false;
+                        if (currentTranslate < -50) {
+                            currentTranslate = -100;
+                        } else {
+                            currentTranslate = 0;
+                        }
+                        content.style.transform = `translateX(${currentTranslate}px)`;
+                    });
+                }
+
+                ui.statusListEl.appendChild(container);
+            });
+        }
+
+        window.confirmDelete = deleteStatus;
+
+        function initViewersListener() {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'viewers'), (snap) => {
+                ui.viewingCount.innerText = `แอบดูอยู่: ${snap.size} คน`;
+            });
+        }
+
+        document.getElementById('btnReady').onclick = () => updateStatus('ready');
+        document.getElementById('btnMaybe').onclick = () => updateStatus('maybe');
+        document.getElementById('btnNo').onclick = () => updateStatus('no');
+        document.getElementById('btnChangeName').onclick = () => setView('form');
+        window.onload = startApp;
+    </script>
+</body>
+</html>
