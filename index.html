@@ -27,7 +27,6 @@
             80%, 100% { content: ''; }
         }
         
-        /* Swipe to delete styles */
         .swipe-container {
             position: relative;
             overflow: hidden;
@@ -39,6 +38,8 @@
             z-index: 2;
             transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
             background: white;
+            cursor: pointer;
+            user-select: none;
         }
         .swipe-action {
             position: absolute;
@@ -55,6 +56,14 @@
             font-weight: bold;
             font-size: 0.875rem;
             border-radius: 0 1rem 1rem 0;
+        }
+        .tap-feedback {
+            animation: tap-pulse 0.3s ease-out;
+        }
+        @keyframes tap-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.97); opacity: 0.8; }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -86,7 +95,7 @@
         <!-- User Action Area -->
         <div id="actionArea" class="glass-card p-6 shadow-xl border border-white/50">
             <div id="inputForm">
-                <label class="block text-gray-600 mb-2 font-medium text-center">ใส่ชื่อ้เล่นมา:</label>
+                <label class="block text-gray-600 mb-2 font-medium text-center">ใส่ชื่อเล่นมา:</label>
                 <input type="text" id="userName" placeholder="พิมพ์ชื่อแล้วเลือกสถานะ..." 
                     class="w-full px-4 py-4 rounded-2xl border-2 border-gray-100 focus:border-blue-400 outline-none mb-5 text-lg transition-all shadow-inner text-center">
                 
@@ -111,7 +120,7 @@
                 <p id="myCurrentStatusDisplay" class="text-gray-500 mt-1"></p>
                 <div class="mt-6 flex flex-col gap-2">
                     <button id="btnChangeName" class="text-blue-500 underline text-sm hover:text-blue-700">แก้ไขชื่อ / เปลี่ยนสถานะ</button>
-                    <p class="text-[10px] text-gray-400 mt-4 italic text-center">💡 ลอง "ปัดซ้าย" ที่ชื่อในรายการข้างล่างเพื่อลบได้นะ</p>
+                    <p class="text-[10px] text-gray-400 mt-4 italic text-center">💡 ลอง "ปัดซ้าย" หรือ "กด 4 ครั้ง" เพื่อลบรายชื่อได้นะ</p>
                 </div>
             </div>
 
@@ -165,6 +174,7 @@
 
         let myUid = null;
         let isProcessing = false;
+        let tapRegistry = {}; // Store taps per person
 
         function setView(view) {
             ui.inputForm.classList.add('hidden');
@@ -204,16 +214,19 @@
             } finally { isProcessing = false; }
         };
 
-        const deleteStatus = async () => {
-            if (!confirm("ลบรายชื่อออกใช่ไหม?")) return;
+        const deleteById = async (targetUid, targetName) => {
+            if (!confirm(`จะลบ "${targetName}" ออกจริงๆ หรอ?`)) return;
             isProcessing = true;
-            setView('loading');
+            if (targetUid === myUid) setView('loading');
             try {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', myUid));
-                ui.userNameInput.value = "";
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', targetUid));
+                if (targetUid === myUid) ui.userNameInput.value = "";
             } catch (err) {
-                setView('control');
-            } finally { isProcessing = false; }
+                console.error(err);
+            } finally { 
+                isProcessing = false; 
+                if (targetUid === myUid) setView('form');
+            }
         };
 
         function initListListener() {
@@ -275,8 +288,8 @@
                     subtext = 'รอดูงาน';
                 }
 
-                const cardHtml = `
-                    <div class="swipe-action" onclick="window.confirmDelete()">ลบชื่อ</div>
+                container.innerHTML = `
+                    <div class="swipe-action">ลบชื่อ</div>
                     <div class="swipe-content flex items-center justify-between p-4 border shadow-sm ${cardBgClass} ${isMe ? 'ring-2 ring-blue-400 ring-offset-2' : ''}">
                         <div class="flex items-center gap-3">
                             <span class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-sm">
@@ -287,49 +300,75 @@
                                 <span class="text-[10px] opacity-70">${subtext}</span>
                             </div>
                         </div>
-                        <div class="text-right">
-                             ${isMe ? '<div class="text-[10px] text-gray-400 animate-pulse">← ปัดซ้ายเพื่อลบ</div>' : ''}
+                        <div class="text-right pointer-events-none">
+                             ${isMe ? '<div class="text-[10px] text-gray-400 animate-pulse">← ปัดซ้าย หรือกด 4 ที</div>' : '<div class="text-[10px] text-gray-400 opacity-40">กด 4 ทีเพื่อลบ</div>'}
                         </div>
                     </div>
                 `;
 
-                container.innerHTML = cardHtml;
                 const content = container.querySelector('.swipe-content');
+                const actionBtn = container.querySelector('.swipe-action');
 
-                if (isMe) {
-                    content.addEventListener('touchstart', (e) => {
-                        startX = e.touches[0].clientX;
-                        isSwiping = true;
-                    });
+                // Tap Count Logic (4 taps to delete)
+                content.addEventListener('click', () => {
+                    const now = Date.now();
+                    if (!tapRegistry[p.uid]) tapRegistry[p.uid] = { count: 0, last: 0 };
+                    
+                    // Reset if too long between taps (more than 1.5 seconds)
+                    if (now - tapRegistry[p.uid].last > 1500) {
+                        tapRegistry[p.uid].count = 0;
+                    }
 
-                    content.addEventListener('touchmove', (e) => {
-                        if (!isSwiping) return;
-                        const diff = e.touches[0].clientX - startX;
-                        if (diff < 0) { 
-                            currentTranslate = Math.max(diff, -100);
-                            content.style.transform = `translateX(${currentTranslate}px)`;
-                        } else if (diff > 0 && currentTranslate < 0) {
-                            currentTranslate = Math.min(0, currentTranslate + diff/5);
-                            content.style.transform = `translateX(${currentTranslate}px)`;
-                        }
-                    });
+                    tapRegistry[p.uid].count++;
+                    tapRegistry[p.uid].last = now;
 
-                    content.addEventListener('touchend', () => {
-                        isSwiping = false;
-                        if (currentTranslate < -50) {
-                            currentTranslate = -100;
-                        } else {
-                            currentTranslate = 0;
-                        }
+                    // Visual Feedback
+                    content.classList.remove('tap-feedback');
+                    void content.offsetWidth; // Trigger reflow
+                    content.classList.add('tap-feedback');
+
+                    if (tapRegistry[p.uid].count >= 4) {
+                        tapRegistry[p.uid].count = 0; // reset
+                        deleteById(p.uid, p.name);
+                    }
+                });
+
+                // Swipe Logic
+                actionBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteById(p.uid, p.name);
+                };
+
+                content.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isSwiping = true;
+                }, {passive: true});
+
+                content.addEventListener('touchmove', (e) => {
+                    if (!isSwiping) return;
+                    const diff = e.touches[0].clientX - startX;
+                    if (diff < -10) { 
+                        currentTranslate = Math.max(diff, -100);
                         content.style.transform = `translateX(${currentTranslate}px)`;
-                    });
-                }
+                    } else if (diff > 0 && currentTranslate < 0) {
+                        currentTranslate = Math.min(0, currentTranslate + diff);
+                        content.style.transform = `translateX(${currentTranslate}px)`;
+                    }
+                }, {passive: true});
+
+                content.addEventListener('touchend', () => {
+                    isSwiping = false;
+                    if (currentTranslate < -60) {
+                        currentTranslate = -100;
+                    } else {
+                        currentTranslate = 0;
+                    }
+                    content.style.transform = `translateX(${currentTranslate}px)`;
+                });
 
                 ui.statusListEl.appendChild(container);
             });
         }
-
-        window.confirmDelete = deleteStatus;
 
         function initViewersListener() {
             onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'viewers'), (snap) => {
