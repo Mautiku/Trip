@@ -7,18 +7,135 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Kanit', sans-serif; 
-            overflow-x: hidden; 
+        body {
+            font-family: 'Kanit', sans-serif;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
         }
-        
-        /* Cute Background with animated waves */
         .bg-summer {
             background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
             position: relative;
-            /* ลบ overflow: hidden ออก — ตัวการทำให้ scroll ไม่ได้บนมือถือ */
         }
-        
+
+        /* ── DARK MODE ─────────────────────────────────────────── */
+        body.dark {
+            background: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%) !important;
+            color: #e2e8f0;
+        }
+        body.dark .glass-card {
+            background: rgba(15, 12, 50, 0.96) !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08) !important;
+        }
+        body.dark .glass-card:hover {
+            box-shadow: 0 25px 70px rgba(0,0,0,0.65) !important;
+        }
+        body.dark .text-gray-800 { color: #e2e8f0 !important; }
+        body.dark .text-gray-700 { color: #cbd5e1 !important; }
+        body.dark .text-gray-600 { color: #94a3b8 !important; }
+        body.dark .text-gray-500 { color: #94a3b8 !important; }
+        body.dark .text-gray-400 { color: #64748b !important; }
+        body.dark .text-blue-700  { color: #93c5fd !important; }
+        body.dark .text-purple-500{ color: #c4b5fd !important; }
+        body.dark .border-blue-100 { border-color: rgba(147,197,253,0.2) !important; }
+        body.dark .border-purple-200 { border-color: rgba(167,139,250,0.35) !important; }
+        /* Info box */
+        body.dark .bg-gradient-to-r.from-blue-50 {
+            background: rgba(55, 48, 163, 0.3) !important;
+            background-image: none !important;
+        }
+        /* Input */
+        body.dark input[type="text"] {
+            background: rgba(25, 25, 65, 0.9) !important;
+            color: #e2e8f0 !important;
+            border-color: rgba(167, 139, 250, 0.5) !important;
+        }
+        body.dark input[type="text"]::placeholder { color: #64748b !important; }
+        /* "ลงชื่อแล้ว" status box */
+        body.dark .bg-purple-50 { background: rgba(88, 28, 135, 0.3) !important; }
+        /* List items */
+        body.dark .swipe-content.border-green-300 {
+            background: rgba(6, 78, 59, 0.55) !important;
+            background-image: none !important;
+            border-color: #059669 !important;
+            color: #6ee7b7 !important;
+        }
+        body.dark .swipe-content.border-orange-300 {
+            background: rgba(120, 53, 15, 0.55) !important;
+            background-image: none !important;
+            border-color: #d97706 !important;
+            color: #fcd34d !important;
+        }
+        body.dark .swipe-content.border-gray-300 {
+            background: rgba(55, 65, 81, 0.55) !important;
+            background-image: none !important;
+            border-color: #6b7280 !important;
+            color: #9ca3af !important;
+        }
+        /* Modal */
+        body.dark #reasonModal .bg-white {
+            background: rgba(18, 16, 52, 0.98) !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark #reasonModal .text-gray-500 { color: #94a3b8 !important; }
+        body.dark #reasonModal .from-gray-200 {
+            background: linear-gradient(to right, #374151, #4b5563) !important;
+            color: #e2e8f0 !important;
+        }
+        /* Time badges */
+        body.dark .time-badge-ready {
+            background: rgba(16,185,129,0.22) !important;
+            color: #34d399 !important;
+            border-color: rgba(16,185,129,0.4) !important;
+        }
+        body.dark .time-badge-maybe {
+            background: rgba(245,158,11,0.22) !important;
+            color: #fbbf24 !important;
+            border-color: rgba(245,158,11,0.4) !important;
+        }
+        body.dark .time-badge-no {
+            background: rgba(107,114,128,0.22) !important;
+            color: #9ca3af !important;
+            border-color: rgba(107,114,128,0.38) !important;
+        }
+        /* UID section */
+        body.dark .uid-inner {
+            background: rgba(25, 22, 65, 0.9) !important;
+            border-color: rgba(167, 139, 250, 0.3) !important;
+        }
+        body.dark .uid-inner code { color: #a78bfa !important; }
+        body.dark .uid-hint { color: #64748b !important; }
+        /* Dark toggle btn */
+        body.dark .dark-toggle {
+            background: rgba(30, 28, 70, 0.85) !important;
+            border-color: rgba(167, 139, 250, 0.5) !important;
+        }
+
+        /* ── DARK TOGGLE BUTTON ──────────────────────────────── */
+        .dark-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            font-size: 1.35rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            line-height: 1;
+        }
+        .dark-toggle:hover {
+            transform: scale(1.15) rotate(20deg);
+        }
+
+        /* ── WAVE ────────────────────────────────────────────── */
         .wave {
             position: fixed;
             bottom: 0;
@@ -31,40 +148,29 @@
             z-index: 0;
             pointer-events: none;
         }
-        
         .wave:nth-child(2) {
             bottom: 10px;
             opacity: 0.5;
             animation: wave 20s linear infinite reverse;
         }
-        
         @keyframes wave {
-            0% { transform: translateX(0); }
+            0%   { transform: translateX(0); }
             100% { transform: translateX(-600px); }
         }
-        
-        /* Floating particles */
+
         .particle {
             position: fixed;
             border-radius: 50%;
             pointer-events: none;
             z-index: 0;
         }
-        
         @keyframes float {
-            0%, 100% { 
-                transform: translateY(0) rotate(0deg); 
-                opacity: 0;
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { 
-                transform: translateY(-100vh) rotate(360deg); 
-                opacity: 0;
-            }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
-        
-        /* Glass morphism cards */
+
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -72,15 +178,13 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.5);
             position: relative;
             z-index: 1;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
         }
-        
         .glass-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 25px 70px rgba(0,0,0,0.2);
         }
-        
-        /* Cute loading dots */
+
         .loading-dots:after {
             content: '.';
             animation: dots 1.5s steps(5, end) infinite;
@@ -91,15 +195,13 @@
             60% { content: '...'; }
             80%, 100% { content: ''; }
         }
-        
-        /* Enhanced swipe container */
+
         .swipe-container {
             position: relative;
             overflow: hidden;
             border-radius: 1.5rem;
             touch-action: pan-y;
         }
-        
         .swipe-content {
             position: relative;
             z-index: 2;
@@ -108,11 +210,7 @@
             cursor: pointer;
             user-select: none;
         }
-        
-        .swipe-content:hover {
-            transform: scale(1.02);
-        }
-        
+        .swipe-content:hover { transform: scale(1.02); }
         .swipe-action {
             position: absolute;
             right: 0;
@@ -129,219 +227,179 @@
             font-size: 0.875rem;
             border-radius: 0 1.5rem 1.5rem 0;
         }
-        
-        /* Tap feedback animation */
-        .tap-feedback {
-            animation: tap-pulse 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-        }
+
+        .tap-feedback { animation: tap-pulse 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
         @keyframes tap-pulse {
-            0% { transform: scale(1); }
-            25% { transform: scale(0.95); }
-            50% { transform: scale(1.02); }
-            75% { transform: scale(0.98); }
+            0%   { transform: scale(1); }
+            25%  { transform: scale(0.95); }
+            50%  { transform: scale(1.02); }
+            75%  { transform: scale(0.98); }
             100% { transform: scale(1); }
         }
-        
-        /* Bouncing animation */
+
         @keyframes bounce-in {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) translateY(-100px);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-            70% { transform: scale(0.9); }
+            0%   { opacity: 0; transform: scale(0.3) translateY(-100px); }
+            50%  { opacity: 1; transform: scale(1.05); }
+            70%  { transform: scale(0.9); }
             100% { transform: scale(1); }
         }
-        
-        .bounce-in {
-            animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        /* Slide in from right */
+        .bounce-in { animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+
         @keyframes slide-in-right {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(100px); }
+            to   { opacity: 1; transform: translateX(0); }
         }
-        
-        .slide-in-right {
-            animation: slide-in-right 0.5s ease-out;
-        }
-        
-        /* Pulse animation */
+        .slide-in-right { animation: slide-in-right 0.5s ease-out; }
+
         @keyframes pulse-scale {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50%       { transform: scale(1.05); }
         }
-        
-        .pulse-scale {
-            animation: pulse-scale 2s ease-in-out infinite;
-        }
-        
-        /* Shimmer effect */
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-        
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            background-size: 1000px 100%;
-            animation: shimmer 3s infinite;
-        }
-        
-        /* Modal overlay */
+        .pulse-scale { animation: pulse-scale 2s ease-in-out infinite; }
+
         .modal-overlay {
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(8px);
             animation: fade-in 0.3s ease-out;
         }
-        
         @keyframes fade-in {
             from { opacity: 0; }
-            to { opacity: 1; }
+            to   { opacity: 1; }
         }
-        
-        /* Button hover effects */
+
         .btn-cute {
             position: relative;
             overflow: hidden;
             transform: translateY(0);
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        
         .btn-cute:before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255,255,255,0.3);
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-        
-        .btn-cute:hover:before {
-            width: 300px;
-            height: 300px;
-        }
-        
-        .btn-cute:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .btn-cute:active {
-            transform: translateY(0) scale(0.98);
-        }
-        
-        /* Cute emoji bounce */
-        .emoji-bounce {
-            display: inline-block;
-            animation: emoji-bounce 1s ease-in-out infinite;
-        }
-        
+        .btn-cute:hover:before { width: 300px; height: 300px; }
+        .btn-cute:hover  { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .btn-cute:active { transform: translateY(0) scale(0.98); }
+
+        .emoji-bounce { display: inline-block; animation: emoji-bounce 1s ease-in-out infinite; }
         @keyframes emoji-bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50%       { transform: translateY(-10px); }
         }
-        
-        /* Counter animation */
-        .counter-pop {
-            animation: counter-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
+
+        .counter-pop { animation: counter-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes counter-pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.3); }
             100% { transform: scale(1); }
         }
-        
-        /* Gradient text */
+
         .gradient-text {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        /* Glowing effect */
         .glow {
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6), 0 0 40px rgba(118, 75, 162, 0.4);
+            box-shadow: 0 0 20px rgba(102,126,234,0.6), 0 0 40px rgba(118,75,162,0.4);
         }
-        
-        /* Confetti effect */
+
         .confetti {
+            width: 10px; height: 10px;
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #f0f;
-            position: absolute;
             animation: confetti-fall 3s linear;
             pointer-events: none;
         }
-        
         @keyframes confetti-fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
+            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        
-        /* Status badge animations */
+
         .status-ready {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
         }
-        
         .status-maybe {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 4px 15px rgba(245,158,11,0.4);
         }
-        
         .status-no {
             background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
-            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+            box-shadow: 0 4px 15px rgba(107,114,128,0.3);
         }
-        
-        /* List item entrance */
-        .list-item-enter {
-            animation: list-item-enter 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
+
+        .list-item-enter { animation: list-item-enter 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes list-item-enter {
-            from {
-                opacity: 0;
-                transform: translateX(-50px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
+            from { opacity: 0; transform: translateX(-50px) scale(0.8); }
+            to   { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        /* ── Timestamp badge ──────────────────────────────────── */
+        .time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.63rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        .time-badge-ready {
+            background: rgba(16,185,129,0.12);
+            color: #059669;
+            border: 1px solid rgba(16,185,129,0.25);
+        }
+        .time-badge-maybe {
+            background: rgba(245,158,11,0.12);
+            color: #b45309;
+            border: 1px solid rgba(245,158,11,0.25);
+        }
+        .time-badge-no {
+            background: rgba(107,114,128,0.1);
+            color: #6b7280;
+            border: 1px solid rgba(107,114,128,0.2);
+        }
+        @keyframes tick-in {
+            0%   { transform: scale(0.7); opacity: 0; }
+            60%  { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .tick-in { animation: tick-in 0.4s cubic-bezier(0.68,-0.55,0.265,1.55); }
+
+        /* ── UID section ──────────────────────────────────────── */
+        .uid-inner {
+            background: rgba(248, 245, 255, 0.9);
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            border-radius: 1rem;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .uid-copy-btn-success {
+            background: linear-gradient(to right, #10b981, #059669) !important;
         }
     </style>
 </head>
 <body class="bg-summer min-h-screen p-4 md:p-8 text-gray-800">
-    <!-- Animated waves -->
+
     <div class="wave"></div>
     <div class="wave"></div>
 
+    <!-- Dark / Light Mode Toggle -->
+    <button id="darkModeToggle" class="dark-toggle" title="สลับ Dark / Light Mode">🌙</button>
+
     <div class="max-w-xl mx-auto space-y-6">
-        <!-- Header Section with cute animations -->
+
+        <!-- Header -->
         <div class="glass-card p-6 text-center border-b-4 border-yellow-400 shadow-2xl bounce-in">
             <div class="text-6xl mb-3 emoji-bounce">🏝️</div>
             <h1 class="text-3xl font-bold gradient-text mb-3">เช็คชื่อพูลวิลล่า</h1>
-            
+
             <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-5 rounded-2xl text-left border-2 border-blue-100 mb-6 slide-in-right">
                 <p class="text-sm text-blue-700 space-y-2">
                     <span class="block">💰 หารกันคนละ <strong class="text-lg text-purple-600">500 - 600 บาท</strong> (10 คน)</span>
@@ -349,15 +407,15 @@
                     <span class="block text-xs text-purple-500 italic mt-2">✨ อัปเดตวุ้ยยย</span>
                 </p>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4">
                 <div class="bg-gradient-to-br from-blue-500 to-blue-700 p-5 rounded-2xl text-white shadow-lg text-center glow transform hover:scale-105 transition-transform">
                     <span class="block text-xs opacity-90 uppercase mb-1">🎯 ไปแน่นอน</span>
-                    <span id="readyCount" class="text-4xl md:text-5xl font-bold counter-pop">0/10</span>
+                    <span id="readyCount" class="text-4xl md:text-5xl font-bold">0/10</span>
                 </div>
                 <div class="bg-gradient-to-br from-purple-600 to-indigo-800 p-5 rounded-2xl text-white shadow-lg text-center glow transform hover:scale-105 transition-transform">
                     <span class="block text-xs opacity-90 uppercase mb-1">💵 กองกลาง</span>
-                    <span id="totalMoney" class="text-4xl md:text-5xl font-bold text-yellow-300 counter-pop">฿0</span>
+                    <span id="totalMoney" class="text-4xl md:text-5xl font-bold text-yellow-300">฿0</span>
                 </div>
             </div>
         </div>
@@ -369,10 +427,8 @@
                     <div class="text-5xl mb-2">👤</div>
                     <label class="block text-gray-700 font-medium text-lg">ใส่ชื่อเล่นมา:</label>
                 </div>
-                
-                <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น..." 
+                <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น..."
                     class="w-full px-6 py-4 rounded-2xl border-2 border-purple-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none mb-6 text-lg transition-all shadow-inner text-center font-medium">
-                
                 <div class="grid grid-cols-1 gap-3">
                     <div class="grid grid-cols-2 gap-3">
                         <button id="btnReady" class="btn-cute bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-6 rounded-2xl shadow-lg text-xl relative overflow-hidden">
@@ -411,47 +467,62 @@
         <!-- List Section -->
         <div class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
             <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h3 class="font-bold text-2xl gradient-text flex items-center gap-2">
-                        <span class="emoji-bounce">👥</span> รายชื่ออัปเดต
-                    </h3>
-                </div>
+                <h3 class="font-bold text-2xl gradient-text flex items-center gap-2">
+                    <span class="emoji-bounce">👥</span> รายชื่ออัปเดต
+                </h3>
                 <span id="viewingCount" class="text-xs bg-gradient-to-r from-red-400 to-pink-400 text-white px-3 py-1.5 rounded-full font-bold uppercase shadow-md pulse-scale">
                     LIVE: 1
                 </span>
             </div>
-            <div id="statusList" class="space-y-4 min-h-[100px]">
+            <div id="statusList" class="space-y-4 min-h-24">
                 <div class="text-center py-12 text-gray-400">
                     <div class="text-5xl mb-3 pulse-scale">🔄</div>
                     <p class="animate-pulse text-sm font-medium">กำลังโหลดข้อมูล...</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Cute Reason Modal -->
+        <!-- UID Section -->
+        <div class="glass-card p-5 shadow-xl border border-white/50 slide-in-right">
+            <div class="text-center mb-3">
+                <span class="text-lg">🔑</span>
+                <span class="font-semibold text-gray-700 ml-1">รหัสผู้ใช้ (User ID)</span>
+            </div>
+            <div class="uid-inner flex items-center gap-3 px-4 py-3 mb-2">
+                <code id="uidDisplay" class="text-xs text-purple-600 flex-1 text-left break-all font-mono select-all leading-relaxed">
+                    กำลังโหลด...
+                </code>
+                <button id="btnCopyUid" class="btn-cute flex-shrink-0 bg-gradient-to-r from-purple-400 to-pink-400 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-md whitespace-nowrap transition-all duration-300">
+                    📋 คัดลอก
+                </button>
+            </div>
+            <p id="copySuccess" class="hidden text-xs text-green-500 text-center font-semibold mb-1 bounce-in">✅ คัดลอก User ID แล้ว!</p>
+            <p class="uid-hint text-xs text-gray-400 italic text-center">💡 ใช้ยืนยันตัวตนเผื่อจำเป็น</p>
+        </div>
+
+    </div><!-- /max-w-xl -->
+
+    <!-- Reason Modal -->
     <div id="reasonModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
         <div class="bg-white w-full max-w-sm rounded-3xl p-8 shadow-2xl bounce-in">
             <div class="text-5xl text-center mb-3">💭</div>
-            <h3 id="modalTitle" class="text-2xl font-bold gradient-text mb-2 text-center">ระบุเหตุผลหน่อย</h3>
+            <h3 id="modalTitle" class="text-2xl font-bold gradient-text mb-2 text-center">บอกเหตุผลหน่อย</h3>
             <p class="text-sm text-gray-500 mb-6 text-center">จะได้รู้ว่าทำไมถึงมาไม่ได้หรือยังไม่แน่ใจ</p>
-            <input type="text" id="reasonInput" placeholder="เช่น ติดหมี, ไม่มีเงิน, เมียด่า..." 
+            <input type="text" id="reasonInput" placeholder="เช่น ติดหมี, ไม่มีเงิน, เมียด่า..."
                 class="w-full px-5 py-4 rounded-xl border-2 border-purple-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none mb-6 text-center font-medium">
             <div class="flex gap-3">
-                <button id="cancelReason" class="btn-cute flex-1 py-4 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-xl font-bold shadow-md">
-                    ยกเลิก
-                </button>
-                <button id="confirmReason" class="btn-cute flex-1 py-4 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl font-bold shadow-lg">
-                    บันทึก ✓
-                </button>
+                <button id="cancelReason" class="btn-cute flex-1 py-4 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-xl font-bold shadow-md">ยกเลิก</button>
+                <button id="confirmReason" class="btn-cute flex-1 py-4 bg-gradient-to-r from-orange-400 to-orange-600 text-white rounded-xl font-bold shadow-lg">บันทึก ✓</button>
             </div>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { initializeApp }   from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, serverTimestamp }
+            from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously }
+            from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyApSBu9MKCqgWhH1_cnqi6l3rPsAx_kZVI",
@@ -462,70 +533,125 @@
             appId: "1:62941354715:web:eb91d5c570179b0abb4afe"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        const app   = initializeApp(firebaseConfig);
+        const db    = getFirestore(app);
+        const auth  = getAuth(app);
         const appId = "pool-villa-trip-group-line";
 
         const ui = {
-            inputForm: document.getElementById('inputForm'),
-            statusControl: document.getElementById('statusControl'),
-            loadingState: document.getElementById('loadingState'),
-            statusListEl: document.getElementById('statusList'),
-            userNameInput: document.getElementById('userName'),
-            readyCount: document.getElementById('readyCount'),
-            totalMoney: document.getElementById('totalMoney'),
+            inputForm:       document.getElementById('inputForm'),
+            statusControl:   document.getElementById('statusControl'),
+            loadingState:    document.getElementById('loadingState'),
+            statusListEl:    document.getElementById('statusList'),
+            userNameInput:   document.getElementById('userName'),
+            readyCount:      document.getElementById('readyCount'),
+            totalMoney:      document.getElementById('totalMoney'),
             myStatusDisplay: document.getElementById('myCurrentStatusDisplay'),
-            viewingCount: document.getElementById('viewingCount'),
-            reasonModal: document.getElementById('reasonModal'),
-            reasonInput: document.getElementById('reasonInput'),
-            modalTitle: document.getElementById('modalTitle')
+            viewingCount:    document.getElementById('viewingCount'),
+            reasonModal:     document.getElementById('reasonModal'),
+            reasonInput:     document.getElementById('reasonInput'),
+            modalTitle:      document.getElementById('modalTitle'),
+            uidDisplay:      document.getElementById('uidDisplay'),
+            btnCopyUid:      document.getElementById('btnCopyUid'),
+            copySuccess:     document.getElementById('copySuccess'),
         };
 
-        let myUid = null;
-        let isProcessing = false;
-        let tapRegistry = {};
-        let pendingStatus = null;
+        let myUid              = null;
+        let isProcessing       = false;
+        let tapRegistry        = {};
+        let pendingStatus      = null;
         let previousReadyCount = 0;
+        let isDarkMode         = false;
 
-        // Create floating particles
+        /* ── Dark Mode Toggle ──────────────────────────────────────── */
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark', isDarkMode);
+            document.getElementById('darkModeToggle').textContent = isDarkMode ? '☀️' : '🌙';
+        });
+
+        /* ── Thai Full DateTime ────────────────────────────────────── */
+        function formatThaiDateTime(timestamp) {
+            if (!timestamp) return '';
+            const ms = timestamp.toMillis ? timestamp.toMillis() : Number(timestamp);
+            if (!ms) return '';
+            const d = new Date(ms);
+            const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
+                            'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+            const day   = d.getDate();
+            const mon   = months[d.getMonth()];
+            const year  = d.getFullYear() + 543;           // พ.ศ.
+            const hh    = d.getHours().toString().padStart(2,'0');
+            const mm    = d.getMinutes().toString().padStart(2,'0');
+            return `${day} ${mon} ${year}, ${hh}:${mm} น.`;
+        }
+
+        /* ── Copy to Clipboard ─────────────────────────────────────── */
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch {
+                const el = document.createElement('textarea');
+                el.value = text;
+                el.style.cssText = 'position:fixed;left:-9999px;top:-9999px;';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            }
+        }
+
+        ui.btnCopyUid.addEventListener('click', async () => {
+            if (!myUid) return;
+            await copyToClipboard(myUid);
+            // feedback
+            ui.copySuccess.classList.remove('hidden');
+            ui.btnCopyUid.textContent = '✅ คัดลอกแล้ว!';
+            ui.btnCopyUid.classList.add('uid-copy-btn-success');
+            setTimeout(() => {
+                ui.copySuccess.classList.add('hidden');
+                ui.btnCopyUid.textContent = '📋 คัดลอก';
+                ui.btnCopyUid.classList.remove('uid-copy-btn-success');
+            }, 2500);
+        });
+
+        /* ── Particles ─────────────────────────────────────────────── */
         function createParticles() {
             for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.cssText = `
-                        width: ${Math.random() * 10 + 5}px;
-                        height: ${Math.random() * 10 + 5}px;
-                        left: ${Math.random() * 100}vw;
-                        background: ${['#667eea', '#764ba2', '#4facfe', '#00f2fe'][Math.floor(Math.random() * 4)]};
-                        animation: float ${Math.random() * 10 + 10}s linear infinite;
-                        animation-delay: ${Math.random() * 5}s;
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    p.style.cssText = `
+                        width:${Math.random()*10+5}px;
+                        height:${Math.random()*10+5}px;
+                        left:${Math.random()*100}vw;
+                        background:${['#667eea','#764ba2','#4facfe','#00f2fe'][Math.floor(Math.random()*4)]};
+                        animation:float ${Math.random()*10+10}s linear infinite;
+                        animation-delay:${Math.random()*5}s;
                     `;
-                    document.body.appendChild(particle);
+                    document.body.appendChild(p);
                 }, i * 200);
             }
         }
 
-        // Confetti effect
         function createConfetti() {
-            const colors = ['#667eea', '#764ba2', '#4facfe', '#00f2fe', '#f59e0b', '#10b981'];
+            const colors = ['#667eea','#764ba2','#4facfe','#00f2fe','#f59e0b','#10b981'];
             for (let i = 0; i < 50; i++) {
                 setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.cssText = `
-                        left: ${Math.random() * 100}vw;
-                        top: -20px;
-                        background: ${colors[Math.floor(Math.random() * colors.length)]};
-                        transform: rotate(${Math.random() * 360}deg);
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.cssText = `
+                        left:${Math.random()*100}vw;top:-20px;
+                        background:${colors[Math.floor(Math.random()*colors.length)]};
+                        transform:rotate(${Math.random()*360}deg);
                     `;
-                    document.body.appendChild(confetti);
-                    setTimeout(() => confetti.remove(), 3000);
+                    document.body.appendChild(c);
+                    setTimeout(() => c.remove(), 3000);
                 }, i * 30);
             }
         }
 
+        /* ── View Management ───────────────────────────────────────── */
         function setView(view) {
             ui.inputForm.classList.add('hidden');
             ui.statusControl.classList.add('hidden');
@@ -533,29 +659,34 @@
             if (view === 'form') {
                 ui.inputForm.classList.remove('hidden');
                 ui.inputForm.classList.add('bounce-in');
-            }
-            if (view === 'control') {
+            } else if (view === 'control') {
                 ui.statusControl.classList.remove('hidden');
                 ui.statusControl.classList.add('bounce-in');
+            } else if (view === 'loading') {
+                ui.loadingState.classList.remove('hidden');
             }
-            if (view === 'loading') ui.loadingState.classList.remove('hidden');
         }
 
+        /* ── Start App ─────────────────────────────────────────────── */
         const startApp = async () => {
             createParticles();
             try {
-                const userCredential = await signInAnonymously(auth);
-                myUid = userCredential.user.uid;
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'viewers', myUid), { 
-                    lastSeen: serverTimestamp() 
+                const cred = await signInAnonymously(auth);
+                myUid = cred.user.uid;
+                // Show UID
+                ui.uidDisplay.textContent = myUid;
+                await setDoc(doc(db,'artifacts',appId,'public','data','viewers',myUid), {
+                    lastSeen: serverTimestamp()
                 });
                 initListListener();
                 initViewersListener();
-            } catch (error) {
+            } catch (err) {
                 ui.statusListEl.innerHTML = '<p class="text-red-500 text-center py-5">กรุณารีเฟรชใหม่</p>';
+                ui.uidDisplay.textContent = 'ไม่สามารถโหลดได้';
             }
         };
 
+        /* ── Update Status ─────────────────────────────────────────── */
         const updateStatus = async (statusType, reason = "") => {
             const name = ui.userNameInput.value.trim();
             if (!name) {
@@ -567,76 +698,76 @@
             isProcessing = true;
             setView('loading');
             try {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', myUid), {
-                    uid: myUid, 
-                    name: name, 
-                    status: statusType, 
-                    reason: reason,
-                    timestamp: serverTimestamp()
+                await setDoc(doc(db,'artifacts',appId,'public','data','responses',myUid), {
+                    uid: myUid, name, status: statusType,
+                    reason, timestamp: serverTimestamp()
                 });
                 if (statusType === 'ready') createConfetti();
-            } catch (err) {
+            } catch {
                 setView('form');
-            } finally { 
-                isProcessing = false; 
+            } finally {
+                isProcessing = false;
                 ui.reasonModal.classList.add('hidden');
                 ui.reasonInput.value = "";
             }
         };
 
+        /* ── Delete ────────────────────────────────────────────────── */
         const deleteById = async (targetUid, targetName) => {
             if (!confirm(`จะลบ "${targetName}" ออกจริงๆ หรอ? 🤔`)) return;
             isProcessing = true;
             if (targetUid === myUid) setView('loading');
             try {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'responses', targetUid));
+                await deleteDoc(doc(db,'artifacts',appId,'public','data','responses',targetUid));
                 if (targetUid === myUid) ui.userNameInput.value = "";
-            } catch (err) {
-                console.error(err);
-            } finally { 
-                isProcessing = false; 
+            } catch (err) { console.error(err); }
+            finally {
+                isProcessing = false;
                 if (targetUid === myUid) setView('form');
             }
         };
 
+        /* ── List Listener ─────────────────────────────────────────── */
         function initListListener() {
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'responses'), (snap) => {
-                const list = [];
-                snap.forEach(d => list.push(d.data()));
-                list.sort((a, b) => (a.timestamp?.toMillis() || 0) - (b.timestamp?.toMillis() || 0));
+            onSnapshot(
+                collection(db,'artifacts',appId,'public','data','responses'),
+                (snap) => {
+                    const list = [];
+                    snap.forEach(d => list.push(d.data()));
+                    list.sort((a,b) => (a.timestamp?.toMillis()||0) - (b.timestamp?.toMillis()||0));
 
-                const myData = list.find(item => item.uid === myUid);
-                if (!isProcessing) {
-                    if (myData) {
-                        setView('control');
-                        let statusTxt = 'ไปชัวร์ ✅';
-                        if(myData.status === 'maybe') statusTxt = 'ยังไม่แน่ 🤔';
-                        if(myData.status === 'no') statusTxt = 'ไม่ไป ❌';
-                        ui.myStatusDisplay.innerText = `ชื่อ: ${myData.name} (${statusTxt})${myData.reason ? ' - ' + myData.reason : ''}`;
-                    } else {
-                        setView('form');
+                    const myData = list.find(item => item.uid === myUid);
+                    if (!isProcessing) {
+                        if (myData) {
+                            setView('control');
+                            let txt = 'ไปชัวร์ ✅';
+                            if (myData.status === 'maybe') txt = 'ยังไม่แน่ 🤔';
+                            if (myData.status === 'no')    txt = 'ไม่ไป ❌';
+                            ui.myStatusDisplay.innerText =
+                                `ชื่อ: ${myData.name} (${txt})${myData.reason ? ' - ' + myData.reason : ''}`;
+                        } else {
+                            setView('form');
+                        }
                     }
+
+                    const newCount = list.filter(i => i.status === 'ready').length;
+                    if (newCount !== previousReadyCount) {
+                        ui.readyCount.classList.add('counter-pop');
+                        ui.totalMoney.classList.add('counter-pop');
+                        setTimeout(() => {
+                            ui.readyCount.classList.remove('counter-pop');
+                            ui.totalMoney.classList.remove('counter-pop');
+                        }, 500);
+                    }
+                    previousReadyCount = newCount;
+                    ui.readyCount.innerText = `${newCount}/10`;
+                    ui.totalMoney.innerText = `฿${(newCount * 500).toLocaleString()}`;
+                    renderList(list);
                 }
-                
-                const readyArr = list.filter(i => i.status === 'ready');
-                const newCount = readyArr.length;
-                
-                if (newCount !== previousReadyCount) {
-                    ui.readyCount.classList.add('counter-pop');
-                    ui.totalMoney.classList.add('counter-pop');
-                    setTimeout(() => {
-                        ui.readyCount.classList.remove('counter-pop');
-                        ui.totalMoney.classList.remove('counter-pop');
-                    }, 500);
-                }
-                previousReadyCount = newCount;
-                
-                ui.readyCount.innerText = `${newCount}/10`;
-                ui.totalMoney.innerText = `฿${(newCount * 500).toLocaleString()}`;
-                renderList(list);
-            });
+            );
         }
 
+        /* ── Render List ───────────────────────────────────────────── */
         function renderList(list) {
             ui.statusListEl.innerHTML = '';
             if (list.length === 0) {
@@ -644,70 +775,74 @@
                     <div class="text-center py-12">
                         <div class="text-6xl mb-4 pulse-scale">😴</div>
                         <p class="text-gray-400 italic font-medium">ยังไม่มีใครลงชื่อเลย...</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
 
             list.forEach((p, index) => {
                 const isReady = p.status === 'ready';
                 const isMaybe = p.status === 'maybe';
-                const isMe = p.uid === myUid;
-                
+                const isMe    = p.uid === myUid;
+
                 const container = document.createElement('div');
                 container.className = 'swipe-container group list-item-enter';
                 container.style.animationDelay = `${index * 0.1}s`;
-                
-                let startX = 0;
-                let currentTranslate = 0;
-                let isSwiping = false;
 
-                let cardBgClass = 'bg-gray-50 border-gray-200 text-gray-500 opacity-70';
-                let statusClass = 'status-no';
-                let icon = '❌';
-                let subtext = p.reason || 'ไม่ไปจ้า';
+                let startX = 0, currentTranslate = 0, isSwiping = false;
 
+                let cardBgClass, statusClass, icon, subtext, timeBadgeClass;
                 if (isReady) {
-                    cardBgClass = 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300 text-green-800';
-                    statusClass = 'status-ready';
-                    icon = '✅';
-                    subtext = 'พร้อมโอน 💰';
+                    cardBgClass    = 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300 text-green-800';
+                    statusClass    = 'status-ready';
+                    icon           = '✅';
+                    subtext        = 'พร้อมโอน 💰';
+                    timeBadgeClass = 'time-badge-ready';
                 } else if (isMaybe) {
-                    cardBgClass = 'bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-300 text-orange-800';
-                    statusClass = 'status-maybe';
-                    icon = '🤔';
-                    subtext = p.reason || 'รอดูงาน';
+                    cardBgClass    = 'bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-300 text-orange-800';
+                    statusClass    = 'status-maybe';
+                    icon           = '🤔';
+                    subtext        = p.reason || 'รอดูงาน';
+                    timeBadgeClass = 'time-badge-maybe';
+                } else {
+                    cardBgClass    = 'bg-gray-100 border-gray-300 text-gray-500';
+                    statusClass    = 'status-no';
+                    icon           = '❌';
+                    subtext        = p.reason || 'ไม่ไปจ้า';
+                    timeBadgeClass = 'time-badge-no';
                 }
+
+                // ── Full Thai DateTime badge ──
+                const tsMillis   = p.timestamp?.toMillis ? p.timestamp.toMillis() : null;
+                const timeLabel  = tsMillis ? formatThaiDateTime(p.timestamp) : '';
+                const timeBadgeHtml = tsMillis
+                    ? `<span class="time-badge ${timeBadgeClass} tick-in">📅 ${timeLabel}</span>`
+                    : '';
 
                 container.innerHTML = `
                     <div class="swipe-action">
-                        <div class="text-center">
-                            <div class="text-2xl mb-1">🗑️</div>
-                            <div>ลบชื่อ</div>
-                        </div>
+                        <div class="text-center"><div class="text-2xl mb-1">🗑️</div><div>ลบชื่อ</div></div>
                     </div>
                     <div class="swipe-content flex items-center justify-between p-5 border-2 shadow-md ${cardBgClass} ${isMe ? 'ring-4 ring-purple-400 ring-offset-4' : ''}">
-                        <div class="flex items-center gap-4">
-                            <span class="w-12 h-12 rounded-full ${statusClass} flex items-center justify-center text-2xl shadow-lg">
-                                ${icon}
-                            </span>
-                            <div class="flex flex-col">
-                                <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                            <span class="w-12 h-12 flex-shrink-0 rounded-full ${statusClass} flex items-center justify-center text-2xl shadow-lg">${icon}</span>
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
                                     <span class="font-bold text-xl leading-tight">${p.name}</span>
-                                    ${isMe ? '<span class="text-[10px] bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2.5 py-1 rounded-full font-normal shadow-sm">คุณ</span>' : ''}
+                                    ${isMe ? '<span class="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2.5 py-1 rounded-full font-normal shadow-sm">คุณ</span>' : ''}
                                 </div>
-                                <span class="text-sm opacity-80 italic mt-1">${subtext}</span>
+                                <span class="text-sm opacity-80 italic">${subtext}</span>
+                                ${timeBadgeHtml}
                             </div>
                         </div>
-                        <div class="text-right pointer-events-none">
-                             ${isMe ? '<div class="text-[10px] text-gray-400 bg-white/50 px-2 py-1 rounded-lg">👈 ปัดซ้าย</div>' : ''}
+                        <div class="pointer-events-none flex-shrink-0 ml-2">
+                            ${isMe ? '<div class="text-xs text-gray-400 bg-white/70 px-2 py-1 rounded-lg">👈 ปัดซ้าย</div>' : ''}
                         </div>
-                    </div>
-                `;
+                    </div>`;
 
-                const content = container.querySelector('.swipe-content');
+                const content   = container.querySelector('.swipe-content');
                 const actionBtn = container.querySelector('.swipe-action');
 
+                // 4-tap to delete
                 content.addEventListener('click', () => {
                     const now = Date.now();
                     if (!tapRegistry[p.uid]) tapRegistry[p.uid] = { count: 0, last: 0 };
@@ -723,28 +858,18 @@
                     }
                 });
 
-                actionBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    deleteById(p.uid, p.name);
-                };
+                actionBtn.onclick = (e) => { e.stopPropagation(); deleteById(p.uid, p.name); };
 
+                // Swipe
                 content.addEventListener('touchstart', (e) => {
-                    startX = e.touches[0].clientX;
-                    isSwiping = true;
-                }, {passive: true});
-
+                    startX = e.touches[0].clientX; isSwiping = true;
+                }, {passive:true});
                 content.addEventListener('touchmove', (e) => {
                     if (!isSwiping) return;
                     const diff = e.touches[0].clientX - startX;
-                    if (diff < -10) { 
-                        currentTranslate = Math.max(diff, -100);
-                        content.style.transform = `translateX(${currentTranslate}px)`;
-                    } else if (diff > 0 && currentTranslate < 0) {
-                        currentTranslate = Math.min(0, currentTranslate + diff);
-                        content.style.transform = `translateX(${currentTranslate}px)`;
-                    }
-                }, {passive: true});
-
+                    if (diff < -10) { currentTranslate = Math.max(diff,-100); content.style.transform = `translateX(${currentTranslate}px)`; }
+                    else if (diff > 0 && currentTranslate < 0) { currentTranslate = Math.min(0,currentTranslate+diff); content.style.transform = `translateX(${currentTranslate}px)`; }
+                }, {passive:true});
                 content.addEventListener('touchend', () => {
                     isSwiping = false;
                     currentTranslate = currentTranslate < -60 ? -100 : 0;
@@ -755,13 +880,28 @@
             });
         }
 
+        /* ── Viewers Listener ──────────────────────────────────────── */
         function initViewersListener() {
-            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'viewers'), (snap) => {
-                ui.viewingCount.innerText = `LIVE: ${snap.size} คน`;
-                ui.viewingCount.classList.add('counter-pop');
-                setTimeout(() => ui.viewingCount.classList.remove('counter-pop'), 500);
-            });
+            onSnapshot(
+                collection(db,'artifacts',appId,'public','data','viewers'),
+                (snap) => {
+                    ui.viewingCount.innerText = `LIVE: ${snap.size} คน`;
+                    ui.viewingCount.classList.add('counter-pop');
+                    setTimeout(() => ui.viewingCount.classList.remove('counter-pop'), 500);
+                }
+            );
         }
+
+        /* ── Button Handlers ───────────────────────────────────────── */
+        document.getElementById('btnReady').onclick    = () => updateStatus('ready');
+        document.getElementById('btnMaybe').onclick    = () => openReasonModal('maybe');
+        document.getElementById('btnNo').onclick       = () => openReasonModal('no');
+        document.getElementById('btnChangeName').onclick = () => setView('form');
+        document.getElementById('cancelReason').onclick  = () => ui.reasonModal.classList.add('hidden');
+        document.getElementById('confirmReason').onclick = () => updateStatus(pendingStatus, ui.reasonInput.value.trim());
+        ui.reasonInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateStatus(pendingStatus, ui.reasonInput.value.trim());
+        });
 
         const openReasonModal = (status) => {
             const name = ui.userNameInput.value.trim();
@@ -775,24 +915,6 @@
             ui.reasonModal.classList.remove('hidden');
             ui.reasonInput.focus();
         };
-
-        document.getElementById('btnReady').onclick = () => updateStatus('ready');
-        document.getElementById('btnMaybe').onclick = () => openReasonModal('maybe');
-        document.getElementById('btnNo').onclick = () => openReasonModal('no');
-        document.getElementById('btnChangeName').onclick = () => setView('form');
-        
-        document.getElementById('cancelReason').onclick = () => ui.reasonModal.classList.add('hidden');
-        document.getElementById('confirmReason').onclick = () => {
-            const reason = ui.reasonInput.value.trim();
-            updateStatus(pendingStatus, reason);
-        };
-
-        ui.reasonInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const reason = ui.reasonInput.value.trim();
-                updateStatus(pendingStatus, reason);
-            }
-        });
 
         window.onload = startApp;
     </script>
