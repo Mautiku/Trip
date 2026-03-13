@@ -6,6 +6,7 @@
     <title>🏝️ ทริปพูลวิลล่า</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <style>
         body {
             font-family: 'Kanit', sans-serif;
@@ -15,6 +16,340 @@
         .bg-summer {
             background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
             position: relative;
+        }
+
+        /* ── LIQUID MODE ─────────────────────────────────────────── */
+        body.liquid-mode {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+            background-size: 200% 200% !important;
+            animation: liquid-gradient 8s ease infinite !important;
+        }
+        @keyframes liquid-gradient {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.liquid-mode .glass-card {
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(40px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                        0 0 60px rgba(102, 126, 234, 0.15) !important;
+        }
+
+        body.liquid-mode .glass-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 12px 48px rgba(31, 38, 135, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                        0 0 80px rgba(102, 126, 234, 0.25) !important;
+        }
+
+        body.liquid-mode .btn-cute {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        body.liquid-mode .btn-cute:hover {
+            background: rgba(255, 255, 255, 0.25) !important;
+            transform: translateY(-4px) scale(1.05) !important;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        body.liquid-mode input[type="text"] {
+            background: rgba(255, 255, 255, 0.12) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        body.liquid-mode input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.65) !important;
+        }
+
+        body.liquid-mode .swipe-content {
+            background: rgba(255, 255, 255, 0.12) !important;
+            backdrop-filter: blur(30px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        body.liquid-mode .text-gray-700,
+        body.liquid-mode .text-gray-800,
+        body.liquid-mode .text-blue-700 {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        body.liquid-mode .text-gray-400,
+        body.liquid-mode .text-gray-500,
+        body.liquid-mode .text-gray-600 {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        body.liquid-mode .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)) !important;
+        }
+
+        body.liquid-mode .bg-gradient-to-r.from-blue-50 {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(20px) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        body.liquid-mode .bg-gradient-to-br {
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(25px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        body.liquid-mode .uid-inner {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(20px) !important;
+            border-color: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        body.liquid-mode .uid-inner code {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        body.liquid-mode #reasonModal .bg-white {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(40px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
+        }
+
+        body.liquid-mode .status-ready,
+        body.liquid-mode .status-maybe,
+        body.liquid-mode .status-no {
+            background: rgba(255, 255, 255, 0.25) !important;
+            backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        }
+
+        /* ── WELCOME SCREEN ────────────────────────────────────── */
+        #welcomeScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% 200%;
+            animation: liquid-gradient 8s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            max-width: 28rem;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            animation: welcome-float 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes welcome-float {
+            0% { opacity: 0; transform: scale(0.5) translateY(100px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .welcome-emoji {
+            font-size: 5rem;
+            animation: welcome-bounce 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes welcome-bounce {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .welcome-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-btn {
+            width: 100%;
+            padding: 1.2rem;
+            border-radius: 1.2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .welcome-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .welcome-btn-yes {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .welcome-btn-yes:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+        }
+
+        .welcome-btn-no {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-btn-no:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-input-screen {
+            animation: slide-in-up 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slide-in-up {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── ADMIN SECTION ─────────────────────────────────────── */
+        .admin-badge {
+            position: fixed;
+            top: 5rem;
+            right: 1rem;
+            z-index: 100;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(245, 158, 11, 0.7); }
+        }
+
+        .ras-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            color: white;
+            box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+            animation: ras-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes ras-glow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* ── LIQUID TOGGLE SWITCH ──────────────────────────────── */
+        .liquid-toggle-container {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px);
+            padding: 0.5rem 0.75rem;
+            border-radius: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.35s ease;
+        }
+
+        .liquid-toggle-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .liquid-toggle-switch {
+            position: relative;
+            width: 3rem;
+            height: 1.5rem;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .liquid-toggle-switch.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .liquid-toggle-slider {
+            position: absolute;
+            top: 0.125rem;
+            left: 0.125rem;
+            width: 1.125rem;
+            height: 1.125rem;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .liquid-toggle-switch.active .liquid-toggle-slider {
+            transform: translateX(1.5rem);
+        }
+
+        .liquid-toggle-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
         }
 
         /* ── DARK MODE ─────────────────────────────────────────── */
@@ -38,21 +373,17 @@
         body.dark .text-purple-500{ color: #c4b5fd !important; }
         body.dark .border-blue-100 { border-color: rgba(147,197,253,0.2) !important; }
         body.dark .border-purple-200 { border-color: rgba(167,139,250,0.35) !important; }
-        /* Info box */
         body.dark .bg-gradient-to-r.from-blue-50 {
             background: rgba(55, 48, 163, 0.3) !important;
             background-image: none !important;
         }
-        /* Input */
         body.dark input[type="text"] {
             background: rgba(25, 25, 65, 0.9) !important;
             color: #e2e8f0 !important;
             border-color: rgba(167, 139, 250, 0.5) !important;
         }
         body.dark input[type="text"]::placeholder { color: #64748b !important; }
-        /* "ลงชื่อแล้ว" status box */
         body.dark .bg-purple-50 { background: rgba(88, 28, 135, 0.3) !important; }
-        /* List items */
         body.dark .swipe-content.border-green-300 {
             background: rgba(6, 78, 59, 0.55) !important;
             background-image: none !important;
@@ -71,7 +402,6 @@
             border-color: #6b7280 !important;
             color: #9ca3af !important;
         }
-        /* Modal */
         body.dark #reasonModal .bg-white {
             background: rgba(18, 16, 52, 0.98) !important;
             color: #e2e8f0 !important;
@@ -81,7 +411,6 @@
             background: linear-gradient(to right, #374151, #4b5563) !important;
             color: #e2e8f0 !important;
         }
-        /* Time badges */
         body.dark .time-badge-ready {
             background: rgba(16,185,129,0.22) !important;
             color: #34d399 !important;
@@ -97,14 +426,12 @@
             color: #9ca3af !important;
             border-color: rgba(107,114,128,0.38) !important;
         }
-        /* UID section */
         body.dark .uid-inner {
             background: rgba(25, 22, 65, 0.9) !important;
             border-color: rgba(167, 139, 250, 0.3) !important;
         }
         body.dark .uid-inner code { color: #a78bfa !important; }
         body.dark .uid-hint { color: #64748b !important; }
-        /* Dark toggle btn */
         body.dark .dark-toggle {
             background: rgba(30, 28, 70, 0.85) !important;
             border-color: rgba(167, 139, 250, 0.5) !important;
@@ -133,6 +460,43 @@
         }
         .dark-toggle:hover {
             transform: scale(1.15) rotate(20deg);
+        }
+
+        /* ── CREDIT BADGE ────────────────────────────────────── */
+        .credit-badge {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 99;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: float-credit 3s ease-in-out infinite;
+        }
+        .credit-badge:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+        }
+        @keyframes float-credit {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        body.dark .credit-badge {
+            background: rgba(30, 28, 70, 0.75);
+            border-color: rgba(167, 139, 250, 0.4);
+        }
+        body.liquid-mode .credit-badge {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.35);
         }
 
         /* ── WAVE ────────────────────────────────────────────── */
@@ -339,7 +703,6 @@
             to   { opacity: 1; transform: translateX(0) scale(1); }
         }
 
-        /* ── Timestamp badge ──────────────────────────────────── */
         .time-badge {
             display: inline-flex;
             align-items: center;
@@ -373,7 +736,6 @@
         }
         .tick-in { animation: tick-in 0.4s cubic-bezier(0.68,-0.55,0.265,1.55); }
 
-        /* ── UID section ──────────────────────────────────────── */
         .uid-inner {
             background: rgba(248, 245, 255, 0.9);
             border: 1px solid rgba(167, 139, 250, 0.25);
@@ -383,12 +745,78 @@
         .uid-copy-btn-success {
             background: linear-gradient(to right, #10b981, #059669) !important;
         }
+
+        /* ── CHART STYLES ────────────────────────────────────── */
+        #dailyStatsChart {
+            max-height: 300px;
+        }
+        body.dark #dailyStatsChart {
+            filter: brightness(0.9);
+        }
+        body.liquid-mode #dailyStatsChart {
+            filter: brightness(1.1) saturate(1.2);
+        }
     </style>
 </head>
 <body class="bg-summer min-h-screen p-4 md:p-8 text-gray-800">
 
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen">
+        <div class="welcome-card" id="welcomeQuestion">
+            <div class="text-center mb-6">
+                <div class="welcome-emoji">👋</div>
+                <h2 class="welcome-title">เป็นเด็กราษป่าว</h2>
+                <p class="text-white text-sm opacity-90 mb-6">ตอบ</p>
+            </div>
+            <div class="space-y-3">
+                <button id="btnWelcomeYes" class="welcome-btn welcome-btn-yes">
+                    <span class="relative z-10">ช่ายยย</span>
+                </button>
+                <button id="btnWelcomeNo" class="welcome-btn welcome-btn-no">
+                    <span class="relative z-10"> ไม่ใช่</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="welcome-card hidden welcome-input-screen" id="welcomeNameInput">
+            <div class="text-center mb-6">
+                <div class="text-5xl mb-3">🌸</div>
+                <h2 class="welcome-title text-2xl">ชื่อเล่นชื่อ?</h2>
+                <p class="text-white text-sm opacity-90"></p>
+            </div>
+            <input type="text" id="welcomeNameField" placeholder="พิมพ์ชื่อเล่นที่นี่..."
+                class="w-full px-6 py-4 rounded-xl border-2 border-white/30 bg-white/20 backdrop-blur-xl text-white placeholder-white/60 focus:border-white/50 focus:ring-4 focus:ring-white/20 outline-none mb-4 text-center font-medium text-lg">
+            <div class="space-y-3">
+                <button id="btnSubmitName" class="welcome-btn welcome-btn-yes">
+                    <span class="relative z-10"> ยืนยันชื่อ</span>
+                </button>
+                <button id="btnSkipName" class="welcome-btn welcome-btn-no">
+                    <span class="relative z-10"> ข้าม</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="wave"></div>
     <div class="wave"></div>
+
+    <!-- Credit Badge -->
+    <div class="credit-badge">
+        ✨ By มิมิวว
+    </div>
+
+    <!-- Admin Badge (visible only for admin) -->
+    <div id="adminBadge" class="admin-badge hidden">
+        👑 ADMIN MODE
+    </div>
+
+    <!-- Liquid Mode Toggle -->
+    <div class="liquid-toggle-container">
+        <span class="liquid-toggle-label">💧 Liquid</span>
+        <div id="liquidModeToggle" class="liquid-toggle-switch">
+            <div class="liquid-toggle-slider"></div>
+        </div>
+    </div>
 
     <!-- Dark / Light Mode Toggle -->
     <button id="darkModeToggle" class="dark-toggle" title="สลับ Dark / Light Mode">🌙</button>
@@ -417,6 +845,36 @@
                     <span class="block text-xs opacity-90 uppercase mb-1">💵 กองกลาง</span>
                     <span id="totalMoney" class="text-4xl md:text-5xl font-bold text-yellow-300">฿0</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- Daily Stats Chart -->
+        <div class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-xl gradient-text flex items-center gap-2">
+                    <span>📊</span> สถิติเข้าชมรายวัน
+                </h3>
+            </div>
+            <div class="relative">
+                <canvas id="dailyStatsChart"></canvas>
+            </div>
+            <p class="text-xs text-gray-500 text-center mt-3 italic">
+                💡 แสดงจำนวนคนเข้าชมใน 7 วันล่าสุด
+            </p>
+        </div>
+
+        <!-- Admin Only: Ras Responses -->
+        <div id="adminRasSection" class="glass-card p-6 shadow-xl border border-white/50 slide-in-right hidden">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-xl gradient-text flex items-center gap-2">
+                    <span>💖</span> คำตอบจากเด็กราษ
+                </h3>
+                <span id="rasCount" class="text-xs bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md">
+                    0 คน
+                </span>
+            </div>
+            <div id="rasResponsesList" class="space-y-3">
+                <p class="text-center text-gray-400 py-8 italic">ยังไม่มีข้อมูล...</p>
             </div>
         </div>
 
@@ -493,14 +951,14 @@
                     กำลังโหลด...
                 </code>
                 <button id="btnCopyUid" class="btn-cute flex-shrink-0 bg-gradient-to-r from-purple-400 to-pink-400 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-md whitespace-nowrap transition-all duration-300">
-                    📋 คัดลอก
+                              📋 คัดลอก
                 </button>
             </div>
             <p id="copySuccess" class="hidden text-xs text-green-500 text-center font-semibold mb-1 bounce-in">✅ คัดลอก User ID แล้ว!</p>
             <p class="uid-hint text-xs text-gray-400 italic text-center">💡 ใช้ยืนยันตัวตนเผื่อจำเป็น</p>
         </div>
 
-    </div><!-- /max-w-xl -->
+    </div>
 
     <!-- Reason Modal -->
     <div id="reasonModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
@@ -537,8 +995,13 @@
         const db    = getFirestore(app);
         const auth  = getAuth(app);
         const appId = "pool-villa-trip-group-line";
+        const ADMIN_UID = "EwpwvrOZ3iOS0leES5I7EOSDq433";
 
         const ui = {
+            welcomeScreen:   document.getElementById('welcomeScreen'),
+            welcomeQuestion: document.getElementById('welcomeQuestion'),
+            welcomeNameInput: document.getElementById('welcomeNameInput'),
+            welcomeNameField: document.getElementById('welcomeNameField'),
             inputForm:       document.getElementById('inputForm'),
             statusControl:   document.getElementById('statusControl'),
             loadingState:    document.getElementById('loadingState'),
@@ -554,6 +1017,10 @@
             uidDisplay:      document.getElementById('uidDisplay'),
             btnCopyUid:      document.getElementById('btnCopyUid'),
             copySuccess:     document.getElementById('copySuccess'),
+            adminBadge:      document.getElementById('adminBadge'),
+            adminRasSection: document.getElementById('adminRasSection'),
+            rasResponsesList: document.getElementById('rasResponsesList'),
+            rasCount:        document.getElementById('rasCount'),
         };
 
         let myUid              = null;
@@ -562,15 +1029,191 @@
         let pendingStatus      = null;
         let previousReadyCount = 0;
         let isDarkMode         = false;
+        let isLiquidMode       = false;
+        let dailyStatsChart    = null;
+        let welcomeCompleted   = false;
+        let isRas              = false;
+        let rasName            = '';
+
+        /* ── Welcome Screen Logic ──────────────────────────────── */
+        document.getElementById('btnWelcomeYes').addEventListener('click', () => {
+            isRas = true;
+            ui.welcomeQuestion.classList.add('hidden');
+            ui.welcomeNameInput.classList.remove('hidden');
+        });
+
+        document.getElementById('btnWelcomeNo').addEventListener('click', () => {
+            isRas = false;
+            closeWelcomeScreen();
+        });
+
+        document.getElementById('btnSubmitName').addEventListener('click', () => {
+            const name = ui.welcomeNameField.value.trim();
+            if (name) {
+                rasName = name;
+                ui.userNameInput.value = name;
+            }
+            closeWelcomeScreen();
+        });
+
+        document.getElementById('btnSkipName').addEventListener('click', () => {
+            closeWelcomeScreen();
+        });
+
+        ui.welcomeNameField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const name = ui.welcomeNameField.value.trim();
+                if (name) {
+                    rasName = name;
+                    ui.userNameInput.value = name;
+                }
+                closeWelcomeScreen();
+            }
+        });
+
+        function closeWelcomeScreen() {
+            ui.welcomeScreen.style.animation = 'fade-out 0.5s ease-out forwards';
+            setTimeout(() => {
+                ui.welcomeScreen.style.display = 'none';
+                welcomeCompleted = true;
+                if (isRas && rasName) {
+                    saveRasResponse();
+                }
+            }, 500);
+        }
+
+        async function saveRasResponse() {
+            if (!myUid || !rasName) return;
+            try {
+                await setDoc(doc(db,'artifacts',appId,'public','data','ras-responses',myUid), {
+                    uid: myUid,
+                    name: rasName,
+                    timestamp: serverTimestamp()
+                });
+            } catch (err) {
+                console.error('Error saving ras response:', err);
+            }
+        }
+
+        /* ── Liquid Mode Toggle ────────────────────────────────────── */
+        document.getElementById('liquidModeToggle').addEventListener('click', function() {
+            isLiquidMode = !isLiquidMode;
+            document.body.classList.toggle('liquid-mode', isLiquidMode);
+            this.classList.toggle('active', isLiquidMode);
+        });
 
         /* ── Dark Mode Toggle ──────────────────────────────────────── */
         document.getElementById('darkModeToggle').addEventListener('click', () => {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
             document.getElementById('darkModeToggle').textContent = isDarkMode ? '☀️' : '🌙';
+            updateChartColors();
         });
 
-        /* ── Thai Full DateTime ────────────────────────────────────── */
+        /* ── Daily Stats Chart ─────────────────────────────────────── */
+        function initDailyStatsChart() {
+            const ctx = document.getElementById('dailyStatsChart').getContext('2d');
+            dailyStatsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'จำนวนผู้เข้าชม',
+                        data: [],
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: 'rgba(118, 75, 162, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            cornerRadius: 8,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            callbacks: {
+                                label: function(context) {
+                                    return `👥 ${context.parsed.y} คน`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                color: isDarkMode ? '#cbd5e1' : '#4b5563',
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: isDarkMode ? '#cbd5e1' : '#4b5563',
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartColors() {
+            if (!dailyStatsChart) return;
+            dailyStatsChart.options.scales.y.ticks.color = isDarkMode ? '#cbd5e1' : '#4b5563';
+            dailyStatsChart.options.scales.x.ticks.color = isDarkMode ? '#cbd5e1' : '#4b5563';
+            dailyStatsChart.options.scales.y.grid.color = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+            dailyStatsChart.options.scales.x.grid.color = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)';
+            dailyStatsChart.update();
+        }
+
+        function updateDailyStatsChart(viewersData) {
+            const dailyStats = {};
+            viewersData.forEach(viewer => {
+                if (viewer.lastSeen && viewer.lastSeen.toDate) {
+                    const date = viewer.lastSeen.toDate();
+                    const dateKey = `${date.getDate()}/${date.getMonth() + 1}`;
+                    dailyStats[dateKey] = (dailyStats[dateKey] || 0) + 1;
+                }
+            });
+
+            const last7Days = [];
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i);
+                const key = `${d.getDate()}/${d.getMonth() + 1}`;
+                last7Days.push({
+                    label: key,
+                    count: dailyStats[key] || 0
+                });
+            }
+
+            dailyStatsChart.data.labels = last7Days.map(d => d.label);
+            dailyStatsChart.data.datasets[0].data = last7Days.map(d => d.count);
+            dailyStatsChart.update();
+        }
+
         function formatThaiDateTime(timestamp) {
             if (!timestamp) return '';
             const ms = timestamp.toMillis ? timestamp.toMillis() : Number(timestamp);
@@ -580,13 +1223,12 @@
                             'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
             const day   = d.getDate();
             const mon   = months[d.getMonth()];
-            const year  = d.getFullYear() + 543;           // พ.ศ.
+            const year  = d.getFullYear() + 543;
             const hh    = d.getHours().toString().padStart(2,'0');
             const mm    = d.getMinutes().toString().padStart(2,'0');
             return `${day} ${mon} ${year}, ${hh}:${mm} น.`;
         }
 
-        /* ── Copy to Clipboard ─────────────────────────────────────── */
         async function copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
@@ -604,7 +1246,6 @@
         ui.btnCopyUid.addEventListener('click', async () => {
             if (!myUid) return;
             await copyToClipboard(myUid);
-            // feedback
             ui.copySuccess.classList.remove('hidden');
             ui.btnCopyUid.textContent = '✅ คัดลอกแล้ว!';
             ui.btnCopyUid.classList.add('uid-copy-btn-success');
@@ -615,7 +1256,6 @@
             }, 2500);
         });
 
-        /* ── Particles ─────────────────────────────────────────────── */
         function createParticles() {
             for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
@@ -651,7 +1291,6 @@
             }
         }
 
-        /* ── View Management ───────────────────────────────────────── */
         function setView(view) {
             ui.inputForm.classList.add('hidden');
             ui.statusControl.classList.add('hidden');
@@ -667,14 +1306,21 @@
             }
         }
 
-        /* ── Start App ─────────────────────────────────────────────── */
         const startApp = async () => {
             createParticles();
+            initDailyStatsChart();
             try {
                 const cred = await signInAnonymously(auth);
                 myUid = cred.user.uid;
-                // Show UID
                 ui.uidDisplay.textContent = myUid;
+
+                // Check if admin
+                if (myUid === ADMIN_UID) {
+                    ui.adminBadge.classList.remove('hidden');
+                    ui.adminRasSection.classList.remove('hidden');
+                    initRasListener();
+                }
+
                 await setDoc(doc(db,'artifacts',appId,'public','data','viewers',myUid), {
                     lastSeen: serverTimestamp()
                 });
@@ -686,7 +1332,49 @@
             }
         };
 
-        /* ── Update Status ─────────────────────────────────────────── */
+        function initRasListener() {
+            onSnapshot(
+                collection(db,'artifacts',appId,'public','data','ras-responses'),
+                (snap) => {
+                    const rasList = [];
+                    snap.forEach(d => rasList.push(d.data()));
+                    rasList.sort((a,b) => (b.timestamp?.toMillis()||0) - (a.timestamp?.toMillis()||0));
+                    
+                    ui.rasCount.textContent = `${rasList.length} คน`;
+                    
+                    if (rasList.length === 0) {
+                        ui.rasResponsesList.innerHTML = '<p class="text-center text-gray-400 py-8 italic">ยังไม่มีข้อมูล...</p>';
+                        return;
+                    }
+
+                    ui.rasResponsesList.innerHTML = '';
+                    rasList.forEach((item, index) => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-200 rounded-xl p-4 list-item-enter';
+                        card.style.animationDelay = `${index * 0.1}s`;
+                        
+                        const timeLabel = item.timestamp ? formatThaiDateTime(item.timestamp) : '';
+                        
+                        card.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-xl shadow-lg">
+                                    💖
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-bold text-gray-800">${item.name}</span>
+                                        <span class="ras-badge">เด็กราษ</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">${timeLabel}</p>
+                                </div>
+                            </div>
+                        `;
+                        ui.rasResponsesList.appendChild(card);
+                    });
+                }
+            );
+        }
+
         const updateStatus = async (statusType, reason = "") => {
             const name = ui.userNameInput.value.trim();
             if (!name) {
@@ -712,7 +1400,6 @@
             }
         };
 
-        /* ── Delete ────────────────────────────────────────────────── */
         const deleteById = async (targetUid, targetName) => {
             if (!confirm(`จะลบ "${targetName}" ออกจริงๆ หรอ? 🤔`)) return;
             isProcessing = true;
@@ -727,7 +1414,6 @@
             }
         };
 
-        /* ── List Listener ─────────────────────────────────────────── */
         function initListListener() {
             onSnapshot(
                 collection(db,'artifacts',appId,'public','data','responses'),
@@ -767,7 +1453,6 @@
             );
         }
 
-        /* ── Render List ───────────────────────────────────────────── */
         function renderList(list) {
             ui.statusListEl.innerHTML = '';
             if (list.length === 0) {
@@ -811,7 +1496,6 @@
                     timeBadgeClass = 'time-badge-no';
                 }
 
-                // ── Full Thai DateTime badge ──
                 const tsMillis   = p.timestamp?.toMillis ? p.timestamp.toMillis() : null;
                 const timeLabel  = tsMillis ? formatThaiDateTime(p.timestamp) : '';
                 const timeBadgeHtml = tsMillis
@@ -842,7 +1526,6 @@
                 const content   = container.querySelector('.swipe-content');
                 const actionBtn = container.querySelector('.swipe-action');
 
-                // 4-tap to delete
                 content.addEventListener('click', () => {
                     const now = Date.now();
                     if (!tapRegistry[p.uid]) tapRegistry[p.uid] = { count: 0, last: 0 };
@@ -860,7 +1543,6 @@
 
                 actionBtn.onclick = (e) => { e.stopPropagation(); deleteById(p.uid, p.name); };
 
-                // Swipe
                 content.addEventListener('touchstart', (e) => {
                     startX = e.touches[0].clientX; isSwiping = true;
                 }, {passive:true});
@@ -880,7 +1562,6 @@
             });
         }
 
-        /* ── Viewers Listener ──────────────────────────────────────── */
         function initViewersListener() {
             onSnapshot(
                 collection(db,'artifacts',appId,'public','data','viewers'),
@@ -888,11 +1569,14 @@
                     ui.viewingCount.innerText = `LIVE: ${snap.size} คน`;
                     ui.viewingCount.classList.add('counter-pop');
                     setTimeout(() => ui.viewingCount.classList.remove('counter-pop'), 500);
+                    
+                    const viewersData = [];
+                    snap.forEach(d => viewersData.push(d.data()));
+                    updateDailyStatsChart(viewersData);
                 }
             );
         }
 
-        /* ── Button Handlers ───────────────────────────────────────── */
         document.getElementById('btnReady').onclick    = () => updateStatus('ready');
         document.getElementById('btnMaybe').onclick    = () => openReasonModal('maybe');
         document.getElementById('btnNo').onclick       = () => openReasonModal('no');
