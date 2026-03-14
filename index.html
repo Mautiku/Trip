@@ -138,6 +138,21 @@
             border: 1px solid rgba(255, 255, 255, 0.35) !important;
         }
 
+        body.liquid-mode .trip-nav-inner {
+            background: rgba(255, 255, 255, 0.12) !important;
+            backdrop-filter: blur(40px) saturate(180%) !important;
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.35),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                        0 0 60px rgba(102, 126, 234, 0.2) !important;
+        }
+
+        body.liquid-mode .coming-soon-box {
+            background: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(20px) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
         /* ── WELCOME SCREEN ────────────────────────────────────── */
         #welcomeScreen {
             position: fixed;
@@ -212,9 +227,7 @@
             transition: transform 0.5s ease;
         }
 
-        .welcome-btn:hover::before {
-            transform: translateX(100%);
-        }
+        .welcome-btn:hover::before { transform: translateX(100%); }
 
         .welcome-btn-yes {
             background: linear-gradient(135deg, #10b981, #059669);
@@ -247,6 +260,144 @@
         @keyframes slide-in-up {
             0% { opacity: 0; transform: translateY(50px); }
             100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* ── TRIP NAVIGATION BAR ──────────────────────────────── */
+        .fixed-trip-nav {
+            position: fixed;
+            top: 4.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 39;
+            white-space: nowrap;
+        }
+
+        .trip-nav-inner {
+            display: inline-flex;
+            gap: 0.35rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 2rem;
+            padding: 0.4rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                        0 0 40px rgba(102, 126, 234, 0.15);
+        }
+
+        .trip-pill {
+            padding: 0.55rem 1.2rem;
+            border-radius: 1.5rem;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            color: rgba(255, 255, 255, 0.75);
+            border: none;
+            background: transparent;
+            white-space: nowrap;
+            font-family: 'Kanit', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trip-pill::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+            border-radius: 1.5rem;
+        }
+
+        .trip-pill:hover::before { transform: translateX(100%); }
+
+        .trip-pill.active {
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2));
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .trip-pill:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.95);
+            transform: scale(1.05);
+        }
+
+        .trip-pill .new-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+            animation: pulse-glow 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        body.dark .trip-nav-inner {
+            background: rgba(15, 12, 50, 0.85) !important;
+            border-color: rgba(167, 139, 250, 0.35) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        body.dark .trip-pill.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.35)) !important;
+        }
+
+        body.dark .trip-pill {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        body.dark .trip-pill:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Trip page transition */
+        .trip-page-enter {
+            animation: trip-page-enter 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        @keyframes trip-page-enter {
+            from { opacity: 0; transform: translateX(30px) scale(0.97); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        /* Coming soon page */
+        .coming-soon-box {
+            background: linear-gradient(135deg, rgba(167,139,250,0.12), rgba(244,114,182,0.08));
+            border: 2px solid rgba(167,139,250,0.25);
+            border-radius: 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        body.dark .coming-soon-box {
+            background: rgba(88, 28, 135, 0.25) !important;
+            border-color: rgba(167, 139, 250, 0.3) !important;
+        }
+
+        .coming-soon-glow {
+            animation: coming-soon-float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes coming-soon-float {
+            0%, 100% { transform: translateY(0) scale(1) rotate(-3deg); filter: drop-shadow(0 0 8px rgba(167,139,250,0.4)); }
+            50% { transform: translateY(-18px) scale(1.05) rotate(3deg); filter: drop-shadow(0 0 20px rgba(167,139,250,0.7)); }
+        }
+
+        .coming-soon-emoji {
+            display: inline-block;
         }
 
         /* ── ADMIN SECTION ─────────────────────────────────────── */
@@ -340,9 +491,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .liquid-toggle-switch.active .liquid-toggle-slider {
-            transform: translateX(1.5rem);
-        }
+        .liquid-toggle-switch.active .liquid-toggle-slider { transform: translateX(1.5rem); }
 
         .liquid-toggle-label {
             font-size: 0.75rem;
@@ -361,9 +510,7 @@
             background: rgba(15, 12, 50, 0.96) !important;
             box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08) !important;
         }
-        body.dark .glass-card:hover {
-            box-shadow: 0 25px 70px rgba(0,0,0,0.65) !important;
-        }
+        body.dark .glass-card:hover { box-shadow: 0 25px 70px rgba(0,0,0,0.65) !important; }
         body.dark .text-gray-800 { color: #e2e8f0 !important; }
         body.dark .text-gray-700 { color: #cbd5e1 !important; }
         body.dark .text-gray-600 { color: #94a3b8 !important; }
@@ -458,9 +605,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             line-height: 1;
         }
-        .dark-toggle:hover {
-            transform: scale(1.15) rotate(20deg);
-        }
+        .dark-toggle:hover { transform: scale(1.15) rotate(20deg); }
 
         /* ── CREDIT BADGE ────────────────────────────────────── */
         .credit-badge {
@@ -512,11 +657,7 @@
             z-index: 0;
             pointer-events: none;
         }
-        .wave:nth-child(2) {
-            bottom: 10px;
-            opacity: 0.5;
-            animation: wave 20s linear infinite reverse;
-        }
+        .wave:nth-child(2) { bottom: 10px; opacity: 0.5; animation: wave 20s linear infinite reverse; }
         @keyframes wave {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-600px); }
@@ -747,18 +888,12 @@
         }
 
         /* ── CHART STYLES ────────────────────────────────────── */
-        #dailyStatsChart {
-            max-height: 300px;
-        }
-        body.dark #dailyStatsChart {
-            filter: brightness(0.9);
-        }
-        body.liquid-mode #dailyStatsChart {
-            filter: brightness(1.1) saturate(1.2);
-        }
+        #dailyStatsChart { max-height: 300px; }
+        body.dark #dailyStatsChart { filter: brightness(0.9); }
+        body.liquid-mode #dailyStatsChart { filter: brightness(1.1) saturate(1.2); }
     </style>
 </head>
-<body class="bg-summer min-h-screen p-4 md:p-8 text-gray-800">
+<body class="bg-summer min-h-screen text-gray-800">
 
     <!-- Welcome Screen -->
     <div id="welcomeScreen">
@@ -797,18 +932,23 @@
         </div>
     </div>
 
+    <!-- Inline script: hide welcome immediately if already completed (prevent flash) -->
+    <script>
+        try {
+            if (localStorage.getItem('poolVilla_welcomeDone') === 'true') {
+                document.getElementById('welcomeScreen').style.display = 'none';
+            }
+        } catch(e) {}
+    </script>
+
     <div class="wave"></div>
     <div class="wave"></div>
 
     <!-- Credit Badge -->
-    <div class="credit-badge">
-        ✨ By มิมิวว
-    </div>
+    <div class="credit-badge">✨ By มิมิวว</div>
 
-    <!-- Admin Badge (visible only for admin) -->
-    <div id="adminBadge" class="admin-badge hidden">
-        👑 ADMIN MODE
-    </div>
+    <!-- Admin Badge -->
+    <div id="adminBadge" class="admin-badge hidden">👑 ADMIN MODE</div>
 
     <!-- Liquid Mode Toggle -->
     <div class="liquid-toggle-container">
@@ -821,144 +961,216 @@
     <!-- Dark / Light Mode Toggle -->
     <button id="darkModeToggle" class="dark-toggle" title="สลับ Dark / Light Mode">🌙</button>
 
-    <div class="max-w-xl mx-auto space-y-6">
+    <!-- ── TRIP NAVIGATION BAR ──────────────────────────────── -->
+    <nav class="fixed-trip-nav">
+        <div class="trip-nav-inner">
+            <button class="trip-pill active" data-trip="1">🏝️ พูลวิลล่า</button>
+            <button class="trip-pill" data-trip="2">ทริปต่อไป <span class="new-dot"></span></button>
+        </div>
+    </nav>
 
-        <!-- Header -->
-        <div class="glass-card p-6 text-center border-b-4 border-yellow-400 shadow-2xl bounce-in">
-            <div class="text-6xl mb-3 emoji-bounce">🏝️</div>
-            <h1 class="text-3xl font-bold gradient-text mb-3">เช็คชื่อพูลวิลล่า</h1>
+    <!-- Main Content Wrapper -->
+    <div style="padding: 1rem; padding-top: 9rem;">
 
-            <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-5 rounded-2xl text-left border-2 border-blue-100 mb-6 slide-in-right">
-                <p class="text-sm text-blue-700 space-y-2">
-                    <span class="block">💰 หารกันคนละ <strong class="text-lg text-purple-600">500 - 600 บาท</strong> (10 คน)</span>
-                    <span class="block">❌ ใครไม่มา <strong>กดปุ่ม "ไม่ไป"</strong> คัฟ</span>
-                    <span class="block text-xs text-purple-500 italic mt-2">✨ อัปเดตวุ้ยยย</span>
+        <!-- ═══ TRIP PAGE 1 ═══════════════════════════════════ -->
+        <div id="tripPage1" class="max-w-xl mx-auto space-y-6">
+
+            <!-- Header -->
+            <div class="glass-card p-6 text-center border-b-4 border-yellow-400 shadow-2xl bounce-in">
+                <div class="text-6xl mb-3 emoji-bounce">🏝️</div>
+                <h1 class="text-3xl font-bold gradient-text mb-3">เช็คชื่อพูลวิลล่า</h1>
+
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-5 rounded-2xl text-left border-2 border-blue-100 mb-6 slide-in-right">
+                    <p class="text-sm text-blue-700 space-y-2">
+                        <span class="block">💰 หารกันคนละ <strong class="text-lg text-purple-600">500 - 600 บาท</strong> (10 คน)</span>
+                        <span class="block">❌ ใครไม่มา <strong>กดปุ่ม "ไม่ไป"</strong> คัฟ</span>
+                        <span class="block text-xs text-purple-500 italic mt-2">✨ อัปเดตวุ้ยยย</span>
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-700 p-5 rounded-2xl text-white shadow-lg text-center glow transform hover:scale-105 transition-transform">
+                        <span class="block text-xs opacity-90 uppercase mb-1">🎯 ไปแน่นอน</span>
+                        <span id="readyCount" class="text-4xl md:text-5xl font-bold">0/10</span>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-600 to-indigo-800 p-5 rounded-2xl text-white shadow-lg text-center glow transform hover:scale-105 transition-transform">
+                        <span class="block text-xs opacity-90 uppercase mb-1">💵 กองกลาง</span>
+                        <span id="totalMoney" class="text-4xl md:text-5xl font-bold text-yellow-300">฿0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Stats Chart -->
+            <div class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-xl gradient-text flex items-center gap-2">
+                        <span>📊</span> สถิติเข้าชมรายวัน
+                    </h3>
+                </div>
+                <div class="relative">
+                    <canvas id="dailyStatsChart"></canvas>
+                </div>
+                <p class="text-xs text-gray-500 text-center mt-3 italic">
+                    💡 แสดงจำนวนคนเข้าชมใน 7 วันล่าสุด
                 </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-gradient-to-br from-blue-500 to-blue-700 p-5 rounded-2xl text-white shadow-lg text-center glow transform hover:scale-105 transition-transform">
-                    <span class="block text-xs opacity-90 uppercase mb-1">🎯 ไปแน่นอน</span>
-                    <span id="readyCount" class="text-4xl md:text-5xl font-bold">0/10</span>
+            <!-- Admin Only: Ras Responses -->
+            <div id="adminRasSection" class="glass-card p-6 shadow-xl border border-white/50 slide-in-right hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-xl gradient-text flex items-center gap-2">
+                        <span>💖</span> คำตอบจากเด็กราษ
+                    </h3>
+                    <span id="rasCount" class="text-xs bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md">0 คน</span>
                 </div>
-                <div class="bg-gradient-to-br from-purple-600 to-indigo-800 p-5 rounded-2xl text-white shadow-lg text-center glow transform hover:scale-105 transition-transform">
-                    <span class="block text-xs opacity-90 uppercase mb-1">💵 กองกลาง</span>
-                    <span id="totalMoney" class="text-4xl md:text-5xl font-bold text-yellow-300">฿0</span>
+                <div id="rasResponsesList" class="space-y-3">
+                    <p class="text-center text-gray-400 py-8 italic">ยังไม่มีข้อมูล...</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Daily Stats Chart -->
-        <div class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-xl gradient-text flex items-center gap-2">
-                    <span>📊</span> สถิติเข้าชมรายวัน
-                </h3>
-            </div>
-            <div class="relative">
-                <canvas id="dailyStatsChart"></canvas>
-            </div>
-            <p class="text-xs text-gray-500 text-center mt-3 italic">
-                💡 แสดงจำนวนคนเข้าชมใน 7 วันล่าสุด
-            </p>
-        </div>
-
-        <!-- Admin Only: Ras Responses -->
-        <div id="adminRasSection" class="glass-card p-6 shadow-xl border border-white/50 slide-in-right hidden">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-xl gradient-text flex items-center gap-2">
-                    <span>💖</span> คำตอบจากเด็กราษ
-                </h3>
-                <span id="rasCount" class="text-xs bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1.5 rounded-full font-bold shadow-md">
-                    0 คน
-                </span>
-            </div>
-            <div id="rasResponsesList" class="space-y-3">
-                <p class="text-center text-gray-400 py-8 italic">ยังไม่มีข้อมูล...</p>
-            </div>
-        </div>
-
-        <!-- User Action Area -->
-        <div id="actionArea" class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
-            <div id="inputForm">
-                <div class="text-center mb-4">
-                    <div class="text-5xl mb-2">👤</div>
-                    <label class="block text-gray-700 font-medium text-lg">ใส่ชื่อเล่นมา:</label>
-                </div>
-                <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น..."
-                    class="w-full px-6 py-4 rounded-2xl border-2 border-purple-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none mb-6 text-lg transition-all shadow-inner text-center font-medium">
-                <div class="grid grid-cols-1 gap-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <button id="btnReady" class="btn-cute bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-6 rounded-2xl shadow-lg text-xl relative overflow-hidden">
-                            <span class="relative z-10">👍 ไปแน่นอน</span>
-                        </button>
-                        <button id="btnMaybe" class="btn-cute bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white font-bold py-6 rounded-2xl shadow-lg text-xl relative overflow-hidden">
-                            <span class="relative z-10">🤔 ไม่ชัวร์</span>
+            <!-- User Action Area -->
+            <div id="actionArea" class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
+                <div id="inputForm">
+                    <div class="text-center mb-4">
+                        <div class="text-5xl mb-2">👤</div>
+                        <label class="block text-gray-700 font-medium text-lg">ใส่ชื่อเล่นมา:</label>
+                    </div>
+                    <input type="text" id="userName" placeholder="พิมพ์ชื่อเล่น..."
+                        class="w-full px-6 py-4 rounded-2xl border-2 border-purple-200 focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none mb-6 text-lg transition-all shadow-inner text-center font-medium">
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="btnReady" class="btn-cute bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-6 rounded-2xl shadow-lg text-xl relative overflow-hidden">
+                                <span class="relative z-10">👍 ไปแน่นอน</span>
+                            </button>
+                            <button id="btnMaybe" class="btn-cute bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white font-bold py-6 rounded-2xl shadow-lg text-xl relative overflow-hidden">
+                                <span class="relative z-10">🤔 ไม่ชัวร์</span>
+                            </button>
+                        </div>
+                        <button id="btnNo" class="btn-cute bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white font-bold py-5 rounded-2xl shadow-md text-lg relative overflow-hidden">
+                            <span class="relative z-10">❌ ไม่ไป</span>
                         </button>
                     </div>
-                    <button id="btnNo" class="btn-cute bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white font-bold py-5 rounded-2xl shadow-md text-lg relative overflow-hidden">
-                        <span class="relative z-10">❌ ไม่ไป</span>
+                </div>
+
+                <div id="statusControl" class="hidden text-center py-6 bounce-in">
+                    <div class="text-6xl mb-3 pulse-scale">✨</div>
+                    <p class="text-3xl font-bold gradient-text mb-2">ลงชื่อเรียบร้อยยย</p>
+                    <div class="bg-purple-50 p-4 rounded-xl border-2 border-purple-200 mb-4">
+                        <p id="myCurrentStatusDisplay" class="text-gray-700 font-medium"></p>
+                    </div>
+                    <div class="mt-6 flex flex-col gap-3">
+                        <button id="btnChangeName" class="btn-cute bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-6 rounded-xl font-bold shadow-md">
+                            ✏️ แก้ไขชื่อ / เปลี่ยนสถานะ
+                        </button>
+                        <p class="text-xs text-gray-400 mt-2 italic">💡 ปัดซ้าย หรือ กด 4 ครั้ง เพื่อลบรายชื่อ</p>
+                    </div>
+                </div>
+
+                <div id="loadingState" class="hidden text-center py-10">
+                    <div class="text-5xl mb-4 pulse-scale">⏳</div>
+                    <p class="text-2xl font-bold text-purple-500 loading-dots">กำลังประมวลผล</p>
+                </div>
+            </div>
+
+            <!-- List Section -->
+            <div class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-2xl gradient-text flex items-center gap-2">
+                        <span class="emoji-bounce">👥</span> รายชื่ออัปเดต
+                    </h3>
+                    <span id="viewingCount" class="text-xs bg-gradient-to-r from-red-400 to-pink-400 text-white px-3 py-1.5 rounded-full font-bold uppercase shadow-md pulse-scale">
+                        LIVE: 1
+                    </span>
+                </div>
+                <div id="statusList" class="space-y-4 min-h-24">
+                    <div class="text-center py-12 text-gray-400">
+                        <div class="text-5xl mb-3 pulse-scale">🔄</div>
+                        <p class="animate-pulse text-sm font-medium">กำลังโหลดข้อมูล...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UID Section -->
+            <div class="glass-card p-5 shadow-xl border border-white/50 slide-in-right">
+                <div class="text-center mb-3">
+                    <span class="text-lg">🔑</span>
+                    <span class="font-semibold text-gray-700 ml-1">รหัสผู้ใช้ (User ID)</span>
+                </div>
+                <div class="uid-inner flex items-center gap-3 px-4 py-3 mb-2">
+                    <code id="uidDisplay" class="text-xs text-purple-600 flex-1 text-left break-all font-mono select-all leading-relaxed">
+                        กำลังโหลด...
+                    </code>
+                    <button id="btnCopyUid" class="btn-cute flex-shrink-0 bg-gradient-to-r from-purple-400 to-pink-400 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-md whitespace-nowrap transition-all duration-300">
+                        📋 คัดลอก
                     </button>
                 </div>
+                <p id="copySuccess" class="hidden text-xs text-green-500 text-center font-semibold mb-1 bounce-in">✅ คัดลอก User ID แล้ว!</p>
+                <p class="uid-hint text-xs text-gray-400 italic text-center">💡 ใช้ยืนยันตัวตนเผื่อจำเป็น</p>
             </div>
 
-            <div id="statusControl" class="hidden text-center py-6 bounce-in">
-                <div class="text-6xl mb-3 pulse-scale">✨</div>
-                <p class="text-3xl font-bold gradient-text mb-2">ลงชื่อเรียบร้อยยย</p>
-                <div class="bg-purple-50 p-4 rounded-xl border-2 border-purple-200 mb-4">
-                    <p id="myCurrentStatusDisplay" class="text-gray-700 font-medium"></p>
-                </div>
-                <div class="mt-6 flex flex-col gap-3">
-                    <button id="btnChangeName" class="btn-cute bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white py-3 px-6 rounded-xl font-bold shadow-md">
-                        ✏️ แก้ไขชื่อ / เปลี่ยนสถานะ
-                    </button>
-                    <p class="text-xs text-gray-400 mt-2 italic">💡 ปัดซ้าย หรือ กด 4 ครั้ง เพื่อลบรายชื่อ</p>
-                </div>
-            </div>
-
-            <div id="loadingState" class="hidden text-center py-10">
-                <div class="text-5xl mb-4 pulse-scale">⏳</div>
-                <p class="text-2xl font-bold text-purple-500 loading-dots">กำลังประมวลผล</p>
-            </div>
         </div>
+        <!-- ═══ END TRIP PAGE 1 ═══════════════════════════════ -->
 
-        <!-- List Section -->
-        <div class="glass-card p-6 shadow-xl border border-white/50 slide-in-right">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-2xl gradient-text flex items-center gap-2">
-                    <span class="emoji-bounce">👥</span> รายชื่ออัปเดต
-                </h3>
-                <span id="viewingCount" class="text-xs bg-gradient-to-r from-red-400 to-pink-400 text-white px-3 py-1.5 rounded-full font-bold uppercase shadow-md pulse-scale">
-                    LIVE: 1
-                </span>
-            </div>
-            <div id="statusList" class="space-y-4 min-h-24">
-                <div class="text-center py-12 text-gray-400">
-                    <div class="text-5xl mb-3 pulse-scale">🔄</div>
-                    <p class="animate-pulse text-sm font-medium">กำลังโหลดข้อมูล...</p>
+        <!-- ═══ TRIP PAGE 2 (Coming Soon) ═══════════════════════ -->
+        <div id="tripPage2" class="max-w-xl mx-auto space-y-6 hidden">
+
+            <!-- Coming Soon Hero Card -->
+            <div class="glass-card p-10 text-center bounce-in overflow-hidden relative">
+                <!-- Background decorative blur -->
+                <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(167,139,250,0.25),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+                <div style="position:absolute;bottom:-30px;left:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(244,114,182,0.2),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+
+                <div class="coming-soon-glow text-8xl mb-6">🌟</div>
+                <h2 class="text-3xl font-bold gradient-text mb-2">ทริปต่อไป</h2>
+                <p class="text-gray-500 mb-8">ยังไม่มีแพลนตอนนี้</p>
+
+                <!-- Coming Soon Box -->
+                <div class="coming-soon-box p-6 mb-8">
+                    <div class="text-4xl mb-3">📋</div>
+                    <p class="font-bold text-gray-700 text-lg mb-1">รายละเอียด</p>
+                    <p class="text-gray-400 text-sm italic">เด่ะกลับมาเช็คใหม้</p>
+                    <div class="flex items-center justify-center gap-2 mt-4">
+                        <div style="width:8px;height:8px;background:#a78bfa;border-radius:50%;animation:pulse-scale 1s ease-in-out infinite;"></div>
+                        <div style="width:8px;height:8px;background:#ec4899;border-radius:50%;animation:pulse-scale 1s ease-in-out infinite;animation-delay:0.2s;"></div>
+                        <div style="width:8px;height:8px;background:#fbbf24;border-radius:50%;animation:pulse-scale 1s ease-in-out infinite;animation-delay:0.4s;"></div>
+                        <span class="text-gray-400 text-sm ml-1 italic">กำลังวางแผน...</span>
+                    </div>
+                </div>
+
+                <!-- Animated Emoji Row -->
+                <div class="flex justify-center gap-5 text-4xl">
+                    <span class="coming-soon-emoji" style="animation: emoji-bounce 1.6s ease-in-out infinite; animation-delay: 0s;">🏖️</span>
+                    <span class="coming-soon-emoji" style="animation: emoji-bounce 1.6s ease-in-out infinite; animation-delay: 0.2s;">🌴</span>
+                    <span class="coming-soon-emoji" style="animation: emoji-bounce 1.6s ease-in-out infinite; animation-delay: 0.4s;">🏄</span>
+                    <span class="coming-soon-emoji" style="animation: emoji-bounce 1.6s ease-in-out infinite; animation-delay: 0.6s;">🍹</span>
+                    <span class="coming-soon-emoji" style="animation: emoji-bounce 1.6s ease-in-out infinite; animation-delay: 0.8s;">🌺</span>
                 </div>
             </div>
-        </div>
 
-        <!-- UID Section -->
-        <div class="glass-card p-5 shadow-xl border border-white/50 slide-in-right">
-            <div class="text-center mb-3">
-                <span class="text-lg">🔑</span>
-                <span class="font-semibold text-gray-700 ml-1">รหัสผู้ใช้ (User ID)</span>
+            <!-- Placeholder Info Card -->
+            <div class="glass-card p-6 text-center slide-in-right">
+                <div class="text-3xl mb-3">📅</div>
+                <h3 class="font-bold text-xl gradient-text mb-2">วันที่และสถานที่</h3>
+                <div class="coming-soon-box p-5">
+                    <p class="text-gray-400 italic text-sm">ยังไม่ได้กำหนด</p>
+                    <p class="text-gray-300 text-xs mt-1">— TBA —</p>
+                </div>
             </div>
-            <div class="uid-inner flex items-center gap-3 px-4 py-3 mb-2">
-                <code id="uidDisplay" class="text-xs text-purple-600 flex-1 text-left break-all font-mono select-all leading-relaxed">
-                    กำลังโหลด...
-                </code>
-                <button id="btnCopyUid" class="btn-cute flex-shrink-0 bg-gradient-to-r from-purple-400 to-pink-400 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-md whitespace-nowrap transition-all duration-300">
-                              📋 คัดลอก
-                </button>
-            </div>
-            <p id="copySuccess" class="hidden text-xs text-green-500 text-center font-semibold mb-1 bounce-in">✅ คัดลอก User ID แล้ว!</p>
-            <p class="uid-hint text-xs text-gray-400 italic text-center">💡 ใช้ยืนยันตัวตนเผื่อจำเป็น</p>
-        </div>
 
-    </div>
+            <!-- Placeholder Budget Card -->
+            <div class="glass-card p-6 text-center slide-in-right">
+                <div class="text-3xl mb-3">💰</div>
+                <h3 class="font-bold text-xl gradient-text mb-2">งบประมาณ</h3>
+                <div class="coming-soon-box p-5">
+                    <p class="text-gray-400 italic text-sm">ยังไม่ได้กำหนด</p>
+                    <p class="text-gray-300 text-xs mt-1">— TBA —</p>
+                </div>
+            </div>
+
+        </div>
+        <!-- ═══ END TRIP PAGE 2 ═══════════════════════════════ -->
+
+    </div><!-- end main content wrapper -->
 
     <!-- Reason Modal -->
     <div id="reasonModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
@@ -998,29 +1210,29 @@
         const ADMIN_UID = "EwpwvrOZ3iOS0leES5I7EOSDq433";
 
         const ui = {
-            welcomeScreen:   document.getElementById('welcomeScreen'),
-            welcomeQuestion: document.getElementById('welcomeQuestion'),
+            welcomeScreen:    document.getElementById('welcomeScreen'),
+            welcomeQuestion:  document.getElementById('welcomeQuestion'),
             welcomeNameInput: document.getElementById('welcomeNameInput'),
             welcomeNameField: document.getElementById('welcomeNameField'),
-            inputForm:       document.getElementById('inputForm'),
-            statusControl:   document.getElementById('statusControl'),
-            loadingState:    document.getElementById('loadingState'),
-            statusListEl:    document.getElementById('statusList'),
-            userNameInput:   document.getElementById('userName'),
-            readyCount:      document.getElementById('readyCount'),
-            totalMoney:      document.getElementById('totalMoney'),
-            myStatusDisplay: document.getElementById('myCurrentStatusDisplay'),
-            viewingCount:    document.getElementById('viewingCount'),
-            reasonModal:     document.getElementById('reasonModal'),
-            reasonInput:     document.getElementById('reasonInput'),
-            modalTitle:      document.getElementById('modalTitle'),
-            uidDisplay:      document.getElementById('uidDisplay'),
-            btnCopyUid:      document.getElementById('btnCopyUid'),
-            copySuccess:     document.getElementById('copySuccess'),
-            adminBadge:      document.getElementById('adminBadge'),
-            adminRasSection: document.getElementById('adminRasSection'),
+            inputForm:        document.getElementById('inputForm'),
+            statusControl:    document.getElementById('statusControl'),
+            loadingState:     document.getElementById('loadingState'),
+            statusListEl:     document.getElementById('statusList'),
+            userNameInput:    document.getElementById('userName'),
+            readyCount:       document.getElementById('readyCount'),
+            totalMoney:       document.getElementById('totalMoney'),
+            myStatusDisplay:  document.getElementById('myCurrentStatusDisplay'),
+            viewingCount:     document.getElementById('viewingCount'),
+            reasonModal:      document.getElementById('reasonModal'),
+            reasonInput:      document.getElementById('reasonInput'),
+            modalTitle:       document.getElementById('modalTitle'),
+            uidDisplay:       document.getElementById('uidDisplay'),
+            btnCopyUid:       document.getElementById('btnCopyUid'),
+            copySuccess:      document.getElementById('copySuccess'),
+            adminBadge:       document.getElementById('adminBadge'),
+            adminRasSection:  document.getElementById('adminRasSection'),
             rasResponsesList: document.getElementById('rasResponsesList'),
-            rasCount:        document.getElementById('rasCount'),
+            rasCount:         document.getElementById('rasCount'),
         };
 
         let myUid              = null;
@@ -1034,6 +1246,17 @@
         let welcomeCompleted   = false;
         let isRas              = false;
         let rasName            = '';
+
+        /* ── Restore Welcome State from localStorage ─────────── */
+        try {
+            if (localStorage.getItem('poolVilla_welcomeDone') === 'true') {
+                welcomeCompleted = true;
+                isRas   = localStorage.getItem('poolVilla_isRas') === 'true';
+                rasName = localStorage.getItem('poolVilla_rasName') || '';
+                ui.welcomeScreen.style.display = 'none';
+                if (rasName) ui.userNameInput.value = rasName;
+            }
+        } catch(e) {}
 
         /* ── Welcome Screen Logic ──────────────────────────────── */
         document.getElementById('btnWelcomeYes').addEventListener('click', () => {
@@ -1049,10 +1272,7 @@
 
         document.getElementById('btnSubmitName').addEventListener('click', () => {
             const name = ui.welcomeNameField.value.trim();
-            if (name) {
-                rasName = name;
-                ui.userNameInput.value = name;
-            }
+            if (name) { rasName = name; ui.userNameInput.value = name; }
             closeWelcomeScreen();
         });
 
@@ -1063,22 +1283,24 @@
         ui.welcomeNameField.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 const name = ui.welcomeNameField.value.trim();
-                if (name) {
-                    rasName = name;
-                    ui.userNameInput.value = name;
-                }
+                if (name) { rasName = name; ui.userNameInput.value = name; }
                 closeWelcomeScreen();
             }
         });
 
         function closeWelcomeScreen() {
+            // Save to localStorage so it's skipped next time
+            try {
+                localStorage.setItem('poolVilla_welcomeDone', 'true');
+                localStorage.setItem('poolVilla_isRas',       isRas.toString());
+                localStorage.setItem('poolVilla_rasName',     rasName);
+            } catch(e) {}
+
             ui.welcomeScreen.style.animation = 'fade-out 0.5s ease-out forwards';
             setTimeout(() => {
                 ui.welcomeScreen.style.display = 'none';
                 welcomeCompleted = true;
-                if (isRas && rasName) {
-                    saveRasResponse();
-                }
+                if (isRas && rasName) saveRasResponse();
             }, 500);
         }
 
@@ -1086,23 +1308,43 @@
             if (!myUid || !rasName) return;
             try {
                 await setDoc(doc(db,'artifacts',appId,'public','data','ras-responses',myUid), {
-                    uid: myUid,
-                    name: rasName,
-                    timestamp: serverTimestamp()
+                    uid: myUid, name: rasName, timestamp: serverTimestamp()
                 });
-            } catch (err) {
-                console.error('Error saving ras response:', err);
-            }
+            } catch (err) { console.error('Error saving ras response:', err); }
         }
 
-        /* ── Liquid Mode Toggle ────────────────────────────────────── */
+        /* ── Trip Tab Switching ────────────────────────────────── */
+        document.querySelectorAll('.trip-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                const trip = this.dataset.trip;
+                document.querySelectorAll('.trip-pill').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+
+                const page1 = document.getElementById('tripPage1');
+                const page2 = document.getElementById('tripPage2');
+
+                if (trip === '1') {
+                    page2.classList.add('hidden');
+                    page1.classList.remove('hidden');
+                    page1.classList.add('trip-page-enter');
+                    setTimeout(() => page1.classList.remove('trip-page-enter'), 600);
+                } else {
+                    page1.classList.add('hidden');
+                    page2.classList.remove('hidden');
+                    page2.classList.add('trip-page-enter');
+                    setTimeout(() => page2.classList.remove('trip-page-enter'), 600);
+                }
+            });
+        });
+
+        /* ── Liquid Mode Toggle ────────────────────────────────── */
         document.getElementById('liquidModeToggle').addEventListener('click', function() {
             isLiquidMode = !isLiquidMode;
             document.body.classList.toggle('liquid-mode', isLiquidMode);
             this.classList.toggle('active', isLiquidMode);
         });
 
-        /* ── Dark Mode Toggle ──────────────────────────────────────── */
+        /* ── Dark Mode Toggle ──────────────────────────────────── */
         document.getElementById('darkModeToggle').addEventListener('click', () => {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark', isDarkMode);
@@ -1110,7 +1352,7 @@
             updateChartColors();
         });
 
-        /* ── Daily Stats Chart ─────────────────────────────────────── */
+        /* ── Daily Stats Chart ─────────────────────────────────── */
         function initDailyStatsChart() {
             const ctx = document.getElementById('dailyStatsChart').getContext('2d');
             dailyStatsChart = new Chart(ctx, {
@@ -1136,9 +1378,7 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
                             backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             padding: 12,
@@ -1146,32 +1386,19 @@
                             titleFont: { size: 14, weight: 'bold' },
                             bodyFont: { size: 13 },
                             callbacks: {
-                                label: function(context) {
-                                    return `👥 ${context.parsed.y} คน`;
-                                }
+                                label: function(context) { return `👥 ${context.parsed.y} คน`; }
                             }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                color: isDarkMode ? '#cbd5e1' : '#4b5563',
-                                font: { size: 11 }
-                            },
-                            grid: {
-                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-                            }
+                            ticks: { stepSize: 1, color: '#4b5563', font: { size: 11 } },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' }
                         },
                         x: {
-                            ticks: {
-                                color: isDarkMode ? '#cbd5e1' : '#4b5563',
-                                font: { size: 11 }
-                            },
-                            grid: {
-                                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
-                            }
+                            ticks: { color: '#4b5563', font: { size: 11 } },
+                            grid: { color: 'rgba(0, 0, 0, 0.03)' }
                         }
                     }
                 }
@@ -1182,8 +1409,8 @@
             if (!dailyStatsChart) return;
             dailyStatsChart.options.scales.y.ticks.color = isDarkMode ? '#cbd5e1' : '#4b5563';
             dailyStatsChart.options.scales.x.ticks.color = isDarkMode ? '#cbd5e1' : '#4b5563';
-            dailyStatsChart.options.scales.y.grid.color = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
-            dailyStatsChart.options.scales.x.grid.color = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)';
+            dailyStatsChart.options.scales.y.grid.color  = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
+            dailyStatsChart.options.scales.x.grid.color  = isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)';
             dailyStatsChart.update();
         }
 
@@ -1191,26 +1418,21 @@
             const dailyStats = {};
             viewersData.forEach(viewer => {
                 if (viewer.lastSeen && viewer.lastSeen.toDate) {
-                    const date = viewer.lastSeen.toDate();
+                    const date    = viewer.lastSeen.toDate();
                     const dateKey = `${date.getDate()}/${date.getMonth() + 1}`;
                     dailyStats[dateKey] = (dailyStats[dateKey] || 0) + 1;
                 }
             });
-
             const last7Days = [];
             const today = new Date();
             for (let i = 6; i >= 0; i--) {
                 const d = new Date(today);
                 d.setDate(d.getDate() - i);
                 const key = `${d.getDate()}/${d.getMonth() + 1}`;
-                last7Days.push({
-                    label: key,
-                    count: dailyStats[key] || 0
-                });
+                last7Days.push({ label: key, count: dailyStats[key] || 0 });
             }
-
-            dailyStatsChart.data.labels = last7Days.map(d => d.label);
-            dailyStatsChart.data.datasets[0].data = last7Days.map(d => d.count);
+            dailyStatsChart.data.labels                    = last7Days.map(d => d.label);
+            dailyStatsChart.data.datasets[0].data          = last7Days.map(d => d.count);
             dailyStatsChart.update();
         }
 
@@ -1218,14 +1440,14 @@
             if (!timestamp) return '';
             const ms = timestamp.toMillis ? timestamp.toMillis() : Number(timestamp);
             if (!ms) return '';
-            const d = new Date(ms);
+            const d      = new Date(ms);
             const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.',
                             'ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-            const day   = d.getDate();
-            const mon   = months[d.getMonth()];
-            const year  = d.getFullYear() + 543;
-            const hh    = d.getHours().toString().padStart(2,'0');
-            const mm    = d.getMinutes().toString().padStart(2,'0');
+            const day  = d.getDate();
+            const mon  = months[d.getMonth()];
+            const year = d.getFullYear() + 543;
+            const hh   = d.getHours().toString().padStart(2,'0');
+            const mm   = d.getMinutes().toString().padStart(2,'0');
             return `${day} ${mon} ${year}, ${hh}:${mm} น.`;
         }
 
@@ -1314,7 +1536,6 @@
                 myUid = cred.user.uid;
                 ui.uidDisplay.textContent = myUid;
 
-                // Check if admin
                 if (myUid === ADMIN_UID) {
                     ui.adminBadge.classList.remove('hidden');
                     ui.adminRasSection.classList.remove('hidden');
@@ -1324,6 +1545,12 @@
                 await setDoc(doc(db,'artifacts',appId,'public','data','viewers',myUid), {
                     lastSeen: serverTimestamp()
                 });
+
+                // If welcome was already done and isRas+rasName, save ras response
+                if (welcomeCompleted && isRas && rasName) {
+                    saveRasResponse();
+                }
+
                 initListListener();
                 initViewersListener();
             } catch (err) {
@@ -1339,9 +1566,9 @@
                     const rasList = [];
                     snap.forEach(d => rasList.push(d.data()));
                     rasList.sort((a,b) => (b.timestamp?.toMillis()||0) - (a.timestamp?.toMillis()||0));
-                    
+
                     ui.rasCount.textContent = `${rasList.length} คน`;
-                    
+
                     if (rasList.length === 0) {
                         ui.rasResponsesList.innerHTML = '<p class="text-center text-gray-400 py-8 italic">ยังไม่มีข้อมูล...</p>';
                         return;
@@ -1352,14 +1579,10 @@
                         const card = document.createElement('div');
                         card.className = 'bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-200 rounded-xl p-4 list-item-enter';
                         card.style.animationDelay = `${index * 0.1}s`;
-                        
                         const timeLabel = item.timestamp ? formatThaiDateTime(item.timestamp) : '';
-                        
                         card.innerHTML = `
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-xl shadow-lg">
-                                    💖
-                                </div>
+                                <div class="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white text-xl shadow-lg">💖</div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 mb-1">
                                         <span class="font-bold text-gray-800">${item.name}</span>
@@ -1367,8 +1590,7 @@
                                     </div>
                                     <p class="text-xs text-gray-500">${timeLabel}</p>
                                 </div>
-                            </div>
-                        `;
+                            </div>`;
                         ui.rasResponsesList.appendChild(card);
                     });
                 }
@@ -1387,8 +1609,7 @@
             setView('loading');
             try {
                 await setDoc(doc(db,'artifacts',appId,'public','data','responses',myUid), {
-                    uid: myUid, name, status: statusType,
-                    reason, timestamp: serverTimestamp()
+                    uid: myUid, name, status: statusType, reason, timestamp: serverTimestamp()
                 });
                 if (statusType === 'ready') createConfetti();
             } catch {
@@ -1496,11 +1717,10 @@
                     timeBadgeClass = 'time-badge-no';
                 }
 
-                const tsMillis   = p.timestamp?.toMillis ? p.timestamp.toMillis() : null;
-                const timeLabel  = tsMillis ? formatThaiDateTime(p.timestamp) : '';
-                const timeBadgeHtml = tsMillis
-                    ? `<span class="time-badge ${timeBadgeClass} tick-in">📅 ${timeLabel}</span>`
-                    : '';
+                const tsMillis       = p.timestamp?.toMillis ? p.timestamp.toMillis() : null;
+                const timeLabel      = tsMillis ? formatThaiDateTime(p.timestamp) : '';
+                const timeBadgeHtml  = tsMillis
+                    ? `<span class="time-badge ${timeBadgeClass} tick-in">📅 ${timeLabel}</span>` : '';
 
                 container.innerHTML = `
                     <div class="swipe-action">
@@ -1517,7 +1737,7 @@
                                 <span class="text-sm opacity-80 italic">${subtext}</span>
                                 ${timeBadgeHtml}
                             </div>
-                        </div>
+                                         </div>
                         <div class="pointer-events-none flex-shrink-0 ml-2">
                             ${isMe ? '<div class="text-xs text-gray-400 bg-white/70 px-2 py-1 rounded-lg">👈 ปัดซ้าย</div>' : ''}
                         </div>
@@ -1569,7 +1789,7 @@
                     ui.viewingCount.innerText = `LIVE: ${snap.size} คน`;
                     ui.viewingCount.classList.add('counter-pop');
                     setTimeout(() => ui.viewingCount.classList.remove('counter-pop'), 500);
-                    
+
                     const viewersData = [];
                     snap.forEach(d => viewersData.push(d.data()));
                     updateDailyStatsChart(viewersData);
@@ -1577,9 +1797,9 @@
             );
         }
 
-        document.getElementById('btnReady').onclick    = () => updateStatus('ready');
-        document.getElementById('btnMaybe').onclick    = () => openReasonModal('maybe');
-        document.getElementById('btnNo').onclick       = () => openReasonModal('no');
+        document.getElementById('btnReady').onclick      = () => updateStatus('ready');
+        document.getElementById('btnMaybe').onclick      = () => openReasonModal('maybe');
+        document.getElementById('btnNo').onclick         = () => openReasonModal('no');
         document.getElementById('btnChangeName').onclick = () => setView('form');
         document.getElementById('cancelReason').onclick  = () => ui.reasonModal.classList.add('hidden');
         document.getElementById('confirmReason').onclick = () => updateStatus(pendingStatus, ui.reasonInput.value.trim());
